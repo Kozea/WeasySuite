@@ -1,0 +1,19 @@
+<!doctype html>
+<title>{{ title }}</title>
+<link rel=stylesheet href="{{ url_for('static', filename='style.css') }}" />
+<style>li { margin: 1em }</style>
+<h1>{{ suite }}</h1>
+<h2>{{ chapter }}</h2>
+<h3><a href="{{ url }}">{{ title }}</a></h3>
+<nav><a href="..">↑</a></nav>
+<ul>
+  {% for test in tests %}
+    <li>
+      <a href="{{ url_for('run_test', suite=suite, chapter_num=chapter_num, section_num=section_num, test_index=loop.index) }}">
+        {{ test.test_id }}
+      </a>
+      {% if test.flags %}({{ test.flags|join(', ') }}){% endif %}
+      <em>{{ test.title }}</em> <br/>{{ test.assertion }}
+    </li>
+  {% endfor %}
+</ul>

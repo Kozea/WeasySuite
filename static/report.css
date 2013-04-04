@@ -1,0 +1,185 @@
+/*******************************************************************************
+ *
+ *  Copyright © 2010-2011 Hewlett-Packard Development Company, L.P. 
+ *
+ *  This work is distributed under the W3C® Software License [1] 
+ *  in the hope that it will be useful, but WITHOUT ANY 
+ *  WARRANTY; without even the implied warranty of 
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *
+ *  [1] http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231 
+ *
+ *  Adapted from the Mobile Test Harness
+ *  Copyright © 2007 World Wide Web Consortium
+ *  http://dev.w3.org/cvsweb/2007/mobile-test-harness/
+ * 
+ ******************************************************************************/
+/*
+ * Style sheet for reporting pages
+ */
+
+html {
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin-left: 1em;  
+  padding-left: 0;
+}
+img {
+  margin: 0;
+}
+p.nav {
+  margin-top: 1em;
+}
+p {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+table {
+  border-collapse: collapse;
+  margin-bottom: 0.5em;
+}
+
+thead {
+  border-bottom: 0.2em solid;
+}
+
+tfoot {
+  border-bottom: 0.2em solid;
+}
+
+tbody {
+  border: thin solid;
+  border-style: solid none;
+}
+
+tbody.ch {
+  border-top: 0.2em solid;
+}
+tbody.ch th {
+  font-weight: bold;
+}
+
+tbody th {
+  border-bottom: silver dotted thin;
+  background: #EEE;
+  color: black;
+  font-weight: normal;
+  font-style: italic;
+}
+tbody th :link {
+  color: gray;
+  background: transparent;
+}
+tbody th :visited {
+  color: #333;
+  background: transparent;
+}
+
+th, td {
+  padding: 0.2em 0.5em;
+  text-align: left;
+  vertical-align: baseline;
+}
+tfoot th, tbody td {
+  border: solid thin #DDD;
+  border-style: none solid;
+}
+
+td {
+  font-size: 0.9em;
+}
+
+tr:hover {
+  background: #F9F9F9;
+  color: navy;
+}
+
+th a,
+td a {
+  text-decoration: none;
+}
+th a:link:hover,
+th a:visited:hover,
+td a:link:hover,
+td a:visited:hover,
+th a:focus,
+td a:focus {
+  text-decoration: underline;
+}
+
+td a {
+  display: block;
+  padding-left: 1em;
+  text-indent: -1em;
+}
+.refs {
+  font-weight: bold;
+  font-size: larger;
+}
+.assert, .assert > li {
+  list-style-type: none;
+  font-style: italic;
+  color: gray;
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+}
+
+
+tr.optional {
+  background-color: #DDD;
+}
+tr.uncertain,
+td.uncertain {
+  background-color: yellow;
+}
+tr.fail,
+td.fail {
+  background-color: #F66;
+}
+td.fail.uncertain {
+  background-color: #FAA;
+}
+tr.pass,
+td.pass {
+  background-color: #8F8;
+}
+tr.pass.bycomponents,
+td.pass.fail,
+td.pass.uncertain {
+  background-color: #BFB;
+}
+tr.pass.bycomponents td:first-child a::after {
+  content: " *";
+}
+tr.invalid,
+td.invalid,
+td.pass.invalid,
+td.fail.invalid,
+td.uncertain.invalid {
+  background-color: #AAA;
+}
+td.primary {
+  font-weight: bold;
+}
+th.engine, td.pass, td.fail, td.uncertain, td.invalid, td.na {
+  text-align: right;
+  white-space: nowrap;
+}
+tfoot th {
+  text-align: right;
+}
+
+table.legend {
+  margin-bottom: 1em;
+}
+table.legend tr td {
+  text-align: left;
+}

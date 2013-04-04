@@ -1,0 +1,20 @@
+<!doctype html>
+<title>{{ suite }}</title>
+<link rel=stylesheet href="{{ url_for('static', filename='style.css') }}" />
+<h1>{{ suite }}</h1>
+<nav>
+  <a href="..">↑</a>
+  <a href="results">r</a>
+</nav>
+<ul>
+  {% for num, (name, sections, test_number) in chapters %}
+    <li><a href="{{ url_for('chapter', suite=suite, chapter_num=num ) }}">{{ name }}</a>,
+      {{ test_number }} tests
+    </li>
+  {% endfor %}
+</ul>
+<p>Total: {{ total }} tests (
+{%- for label, grouped_tests in tests | groupby('result') | sort(0) %}
+  {%- if len(grouped_tests) %}{{ len(grouped_tests) }} {{ label }}{% if not loop.last %}, {% endif %}{% endif -%}
+{% endfor -%}
+).</p>

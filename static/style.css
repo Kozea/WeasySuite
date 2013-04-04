@@ -1,0 +1,33 @@
+nav {
+    font-size: 1.5em;
+    margin: 0;
+    position: fixed;
+    top: 1em;
+    right: 1em;
+}
+nav a {
+    text-decoration: none;
+    margin-left: 1em;
+    color: inherit;
+}
+nav a:not([href]) {
+    opacity: .2;
+}
+label {
+    display: block;
+}
+form {
+    display: block;
+    background: rgba(0, 0, 0, 0.1);
+    float: right;
+    padding: 1em;
+}
+form.pass, tr.pass {
+    background: rgba(0, 255, 0, 0.2);
+}
+form.fail, tr.fail {
+    background: rgba(255, 0, 0, 0.2);
+}
+form.na, tr.na {
+    background: rgba(0, 0, 255, 0.2);
+}
