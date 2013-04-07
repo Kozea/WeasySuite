@@ -17,7 +17,7 @@
       <thead>
         <tr>
           <th>Testcase</th>
-          {% for version in all_suites %}
+          {% for version in all_suites | sort %}
             <th>{{ version }}</th>
           {% endfor %}
         </tr>
@@ -40,7 +40,7 @@
               {{ test.test_id }}
             </a>
           </td>
-          {% for version in all_suites %}
+          {% for version in all_suites | sort %}
           {% set version_test = all_suites[version][suite]['tests'][test.test_id] %}
           <td class='{{ version_test.result }}'>{{ version_test.result }} {{ version_test.comment or '' }}</td>
           {% endfor %}
@@ -50,15 +50,21 @@
       {% endfor %}
       {% endfor %}
       <tfoot>
-        <tr>
+        <tr class='pass'>
           <th>Passed</th>
-          {% for version, version_results in results.items() %}
+          {% for version, version_results in results.items() | sort %}
           <th>{{ (100 * version_results.pass / number) | round(2) }}%</th>
+          {% endfor %}
+        </tr>
+        <tr class='fail'>
+          <th>Failed</th>
+          {% for version, version_results in results.items() | sort %}
+          <th>{{ (100 * version_results.fail / number) | round(2) }}%</th>
           {% endfor %}
         </tr>
         <tr>
           <th>Coverage</th>
-          {% for version, version_results in results.items() %}
+          {% for version, version_results in results.items() | sort %}
           <th>{{ (100 * version_results.count / number) | round(2) }}%</th>
           {% endfor %}
         </tr>
@@ -73,13 +79,13 @@
       </thead>
       <tbody>
         <tr>
-          <td class='pass'>pass</td>
+          <td class='pass'>Pass</td>
         </tr>
         <tr>
-          <td class='fail'>fail</td>
+          <td class='fail'>Fail</td>
         </tr>
         <tr>
-          <td>not tested</td>
+          <td>Not tested, not available</td>
         </tr>
       </tbody>
     </table>

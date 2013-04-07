@@ -20,6 +20,7 @@ from __future__ import division, unicode_literals
 import os
 import sys
 import fileinput
+import optparse
 from datetime import datetime
 
 import lxml.html
@@ -28,6 +29,12 @@ from flask import (
     redirect, request, url_for)
 
 from weasyprint import HTML, CSS, VERSION
+
+parser = optparse.OptionParser(version=VERSION)
+parser.add_option('-V', '--weasyprint-version', default=VERSION)
+options = parser.parse_args()[0]
+if options.weasyprint_version:
+    VERSION = options.weasyprint_version
 
 STYLESHEET = CSS(string='''
     @page { margin: 20px; size: 680px }
@@ -186,7 +193,7 @@ def run(suite_directory):
         results = {}
         number = 0
         for version in all_suites:
-            results[version] = {'pass': 0, 'count': 0}
+            results[version] = {'pass': 0, 'fail': 0, 'count': 0}
         for (name, sections, test_number) in chapters:
             for name, link, tests in sections:
                 for test in tests:
@@ -196,10 +203,9 @@ def run(suite_directory):
                                         ['tests'][test['test_id']])
                         if version_test['result'] != '?':
                             results[version]['count'] += 1
-                        if version_test['result'] == 'pass':
-                            results[version]['pass'] += 1
+                        if version_test['result'] in results[version]:
+                            results[version][version_test['result']] += 1
 
-        print(results)
         return render_template(
             'suite_results.html', all_suites=all_suites, suite=suite,
             chapters=chapters, number=number, results=results)
