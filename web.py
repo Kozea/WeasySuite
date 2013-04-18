@@ -39,6 +39,7 @@ if options.weasyprint_version:
 STYLESHEET = CSS(string='''
     @page { margin: 20px; size: 680px }
     body { margin: 0 }
+    :root { image-rendering: optimizespeed }
 ''')
 FOLDER = os.path.dirname(__file__)
 OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'css2.1-png')
