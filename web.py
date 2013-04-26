@@ -117,7 +117,7 @@ def read_toc(suite_directory, tests_by_link):
 def prepare_test_data(suite_directory, version=VERSION):
     suites = {}
     tests_by_link = {}
-    suites_directory = os.path.join(suite_directory, 'suites')
+    suites_directory = os.path.abspath(os.path.join(suite_directory, 'suites'))
     for suite in os.listdir(suites_directory):
         date, = os.listdir(os.path.join(suites_directory, suite))
         path = os.path.join(suites_directory, suite, date)
