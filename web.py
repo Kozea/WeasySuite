@@ -47,34 +47,38 @@ OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'css2.1-png')
 # than nothing
 FORMAT = 'html4'
 EXTENSION = 'html'
-# TODO: make this work with different suites
-BASE_PATH = os.path.join(FOLDER, 'suites', 'css2.1', '20110323')
-BASE_URL = 'file://' + os.path.join(BASE_PATH, FORMAT, '')
+BASE_PATH = os.path.join(FOLDER, 'suites')
 
 
+SUITES = {}
 REFERENCES = {}
-with open(os.path.join(BASE_PATH, FORMAT, 'reftest.list')) as fd:
-    for line in fd.readlines():
-        line = line.decode('ascii')
-        # Remove comments
-        line = line.split('#', 1)[0]
-        if not line.strip():
-            # Comment-only line
-            continue
-        parts = line.split()
-        comparaison = parts[0]
-        if comparaison == '==':
-            equal = True
-        elif comparaison == '!=':
-            equal = False
-        else:
-            raise ValueError(line)
-        test = parts[1].split('.')[0]
-        references = [part.split('.')[0] for part in parts[2:]]
-        assert references, 'No reference'
-        if test not in REFERENCES:
-            REFERENCES[test] = {}
-        REFERENCES[test][equal] = references
+
+for suite in os.listdir(BASE_PATH):
+    date, = os.listdir(os.path.join(BASE_PATH, suite))
+    SUITES[suite] = date
+    filename = os.path.join(BASE_PATH, suite, date, FORMAT, 'reftest.list')
+    with open(filename) as fd:
+        for line in fd.readlines():
+            line = line.decode('ascii')
+            # Remove comments
+            line = line.split('#', 1)[0]
+            if not line.strip():
+                # Comment-only line
+                continue
+            parts = line.split()
+            comparaison = parts[0]
+            if comparaison == '==':
+                equal = True
+            elif comparaison == '!=':
+                equal = False
+            else:
+                raise ValueError(line)
+            test = parts[1].split('.')[0]
+            references = [part.split('.')[0] for part in parts[2:]]
+            assert references, 'No reference'
+            if test not in REFERENCES:
+                REFERENCES[test] = {}
+            REFERENCES[test][equal] = references
 
 
 def read_testinfo(suite_directory):
@@ -93,7 +97,12 @@ def read_testinfo(suite_directory):
 
 def read_chapter(filename, tests_by_link):
     # TODO: fix this CSS21-only line
-    url_prefix = 'http://www.w3.org/TR/CSS21/'
+    index_filename = os.path.join(
+        os.path.dirname(os.path.dirname(filename)), 'index.%s' % EXTENSION)
+    if not os.path.isfile(index_filename):
+        index_filename = index_filename[:-1]
+    url_prefix = lxml.html.parse(index_filename).xpath(
+        '//a[starts-with(@href, "http://www.w3.org/TR/")]')[0].get('href')
     for link in lxml.html.parse(filename).xpath(
             '//th/a[starts-with(@href, "%s")]' % url_prefix):
         url = link.get('href')[len(url_prefix):]
@@ -106,6 +115,8 @@ def read_chapter(filename, tests_by_link):
 def read_toc(suite_directory, tests_by_link):
     suite_directory = os.path.join(suite_directory, FORMAT)
     filename = os.path.join(suite_directory, '.'.join(('toc', EXTENSION)))
+    if not os.path.isfile(filename):
+        filename = filename[:-1]
     for link in lxml.html.parse(filename).xpath('//table//a[@href]'):
         filename = os.path.join(suite_directory, link.get('href'))
         sections = list(read_chapter(filename, tests_by_link))
@@ -129,8 +140,11 @@ def prepare_test_data(suite_directory, version=VERSION):
         chapters = list(read_toc(path, tests_by_link))
         suites[suite] = {'path': path, 'tests': tests, 'chapters': chapters}
 
-        results = iter(open(
-            os.path.join(FOLDER, 'results', version, suite)).readlines())
+        filename = os.path.join(FOLDER, 'results', version, suite)
+        if os.path.isfile(filename):
+            results = iter(open(filename).readlines())
+        else:
+            results = []
 
         for result_line in results:
             result_line = result_line[:-1]
@@ -297,6 +311,9 @@ def run(suite_directory):
         stylesheets = [STYLESHEET]
         if stylesheet:
             stylesheets.append(os.path.join(folder, 'support', stylesheet))
+        if '/' in test_id:
+            folder = os.path.join(folder, os.path.dirname(test_id))
+            test_id = os.path.basename(test_id)
         filename, = [
             filename for filename
             in os.listdir(folder) if filename.startswith(test_id + '.')]
