@@ -45,7 +45,7 @@ FOLDER = os.path.dirname(__file__)
 OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'png')
 # Changing these values isn't enough to test another format, but it's better
 # than nothing
-FORMAT = 'html4'
+FORMATS = ['html4', 'html']
 EXTENSION = 'html'
 BASE_PATH = os.path.join(FOLDER, 'suites')
 
@@ -55,8 +55,11 @@ REFERENCES = {}
 
 for suite in os.listdir(BASE_PATH):
     date, = os.listdir(os.path.join(BASE_PATH, suite))
-    SUITES[suite] = date
-    filename = os.path.join(BASE_PATH, suite, date, FORMAT, 'reftest.list')
+    formats = set(os.listdir(os.path.join(BASE_PATH, suite, date)))
+    format = formats.intersection(FORMATS).pop()
+    SUITES[suite] = {'date': date, 'format': format}
+    filename = os.path.join(
+        BASE_PATH, suite, date, SUITES[suite]['format'], 'reftest.list')
     with open(filename) as fd:
         for line in fd.readlines():
             line = line.decode('ascii')
@@ -113,7 +116,8 @@ def read_chapter(filename, tests_by_link):
 
 
 def read_toc(suite_directory, tests_by_link):
-    suite_directory = os.path.join(suite_directory, FORMAT)
+    suite = os.path.basename(os.path.dirname(suite_directory))
+    suite_directory = os.path.join(suite_directory, SUITES[suite]['format'])
     filename = os.path.join(suite_directory, '.'.join(('toc', EXTENSION)))
     if not os.path.isfile(filename):
         filename = filename[:-1]
@@ -148,7 +152,7 @@ def prepare_test_data(suite_directory, version=VERSION):
 
         for result_line in results:
             result_line = result_line[:-1]
-            if result_line.startswith(FORMAT):
+            if result_line.startswith(SUITES[suite]['format']):
                 name, result, comment = result_line.split('\t', 2)
                 if '\t' in comment:
                     comment, date = comment.split('\t')
@@ -156,8 +160,12 @@ def prepare_test_data(suite_directory, version=VERSION):
                 else:
                     date = None
                 format, test_id = name.split('/')
-                if format == FORMAT:
-                    test_id = test_id.rsplit('.', 1)[0]
+                if format == SUITES[suite]['format']:
+                    test_id_parts = test_id.split('.')
+                    for i in range(len(test_id_parts)):
+                        test_id = '.'.join(test_id_parts[:-i])
+                        if test_id in tests:
+                            break
                     tests[test_id]['result'] = result
                     tests[test_id]['comment'] = comment
                     tests[test_id]['date'] = date
@@ -172,9 +180,10 @@ def prepare_test_data(suite_directory, version=VERSION):
 
 
 def save_test(suite, test):
+    format = SUITES[suite]['format']
     filename = os.path.join(FOLDER, 'results', VERSION, suite)
     for line in fileinput.input(filename, inplace=1):
-        if line.startswith('/'.join((FORMAT, test['test_id'] + '.'))):
+        if line.startswith('/'.join((format, test['test_id'] + '.'))):
             line = '\t'.join((
                 line.split('\t')[0], test['result'] or '?',
                 test['comment'] or '', str(test['date']))) + '\n'
@@ -284,10 +293,10 @@ def run(suite_directory):
         from pygments.lexers import HtmlLexer
         from pygments.formatters import HtmlFormatter
 
-        folder = safe_join(suites[suite]['path'], FORMAT)
+        folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
         filenames = [
-            filename for filename
-            in os.listdir(folder) if filename.startswith(test_id + '.')]
+            filename for filename in os.listdir(folder)
+            if filename.lower().startswith(test_id + '.')]
         if filenames:
             filename = safe_join(folder, filenames[0])
             with open(filename, 'rb') as fd:
@@ -307,7 +316,7 @@ def run(suite_directory):
     @app.route('/render/suite-<suite>/<path:test_id>/media-<media_type>')
     @app.route('/render/suite-<suite>/<path:test_id>/style-<stylesheet>')
     def render(suite, test_id, media_type='print', stylesheet=None):
-        folder = safe_join(suites[suite]['path'], FORMAT)
+        folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
         stylesheets = [STYLESHEET]
         if stylesheet:
             stylesheets.append(os.path.join(folder, 'support', stylesheet))
@@ -315,8 +324,8 @@ def run(suite_directory):
             folder = os.path.join(folder, os.path.dirname(test_id))
             test_id = os.path.basename(test_id)
         filename, = [
-            filename for filename
-            in os.listdir(folder) if filename.startswith(test_id + '.')]
+            filename for filename in os.listdir(folder)
+            if filename.lower().startswith(test_id + '.')]
         filename = safe_join(folder, filename)
         document = (
             HTML(filename, encoding='utf8', media_type=media_type)
@@ -330,7 +339,8 @@ def run(suite_directory):
     @app.route('/test-data/suite-<suite>/<path:filename>')
     def test_data(suite, filename):
         return send_from_directory(
-            safe_join(suites[suite]['path'], FORMAT), filename)
+            safe_join(suites[suite]['path'], SUITES[suite]['format']),
+            filename)
 
     app.run(debug=True)
 
