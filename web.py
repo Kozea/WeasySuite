@@ -42,7 +42,7 @@ STYLESHEET = CSS(string='''
     :root { image-rendering: optimizespeed }
 ''')
 FOLDER = os.path.dirname(__file__)
-OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'css2.1-png')
+OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'png')
 # Changing these values isn't enough to test another format, but it's better
 # than nothing
 FORMAT = 'html4'
@@ -89,7 +89,7 @@ def read_testinfo(suite_directory):
             test_id, references, title, flags, links, _, _, assertion = \
                 line.strip(' \n').split('\t')
             yield dict(
-                test_id=test_id, assertion=assertion, title=title,
+                test_id=test_id.lower(), assertion=assertion, title=title,
                 flags=(flags or '').split(','),
                 links=(links or '').split(','),
                 references=REFERENCES.get(test_id, {}))
@@ -157,7 +157,7 @@ def prepare_test_data(suite_directory, version=VERSION):
                     date = None
                 format, test_id = name.split('/')
                 if format == FORMAT:
-                    test_id = test_id.split('.')[0]
+                    test_id = test_id.rsplit('.', 1)[0]
                     tests[test_id]['result'] = result
                     tests[test_id]['comment'] = comment
                     tests[test_id]['date'] = date
