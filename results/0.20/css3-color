@@ -1,0 +1,113 @@
+# WeasyPrint 0.x
+#
+# http://test.csswg.org/suites/css2.1/20110323/
+# See http://wiki.csswg.org/test/implementation-report for instructions
+testname    result  comment
+html4/t31-color-currentcolor-b.htm	pass		2013-12-13 22:37:26
+xhtml1/t31-color-currentcolor-b.xht	?	
+html4/t31-color-text-a.htm	pass		2013-12-13 18:02:52
+xhtml1/t31-color-text-a.xht	?	
+html4/t32-opacity-basic-0.0-a.htm	pass		2013-12-13 18:03:10
+xhtml1/t32-opacity-basic-0.0-a.xht	?	
+html4/t32-opacity-basic-0.6-a.htm	pass		2013-12-13 18:05:18
+xhtml1/t32-opacity-basic-0.6-a.xht	?	
+html4/t32-opacity-basic-1.0-a.htm	pass		2013-12-13 18:03:16
+xhtml1/t32-opacity-basic-1.0-a.xht	?	
+html4/t32-opacity-clamping-0.0-b.htm	pass		2013-12-13 18:03:17
+xhtml1/t32-opacity-clamping-0.0-b.xht	?	
+html4/t32-opacity-clamping-1.0-b.htm	pass		2013-12-13 18:03:20
+xhtml1/t32-opacity-clamping-1.0-b.xht	?	
+html4/t32-opacity-offscreen-b.htm	pass		2013-12-13 18:03:22
+xhtml1/t32-opacity-offscreen-b.xht	?	
+html4/t32-opacity-offscreen-multiple-boxes-1-c.htm	fail		2013-12-13 18:03:27
+xhtml1/t32-opacity-offscreen-multiple-boxes-1-c.xht	?	
+html4/t32-opacity-offscreen-multiple-boxes-2-c.htm	fail		2013-12-13 18:03:29
+xhtml1/t32-opacity-offscreen-multiple-boxes-2-c.xht	?	
+html4/t32-opacity-offscreen-with-alpha-c.htm	pass		2013-12-13 18:03:35
+xhtml1/t32-opacity-offscreen-with-alpha-c.xht	?	
+html4/t32-opacity-zorder-c.htm	fail		2013-12-13 18:03:44
+xhtml1/t32-opacity-zorder-c.xht	?	
+html4/t41-html4-keywords-a.htm	pass		2013-12-13 18:04:49
+xhtml1/t41-html4-keywords-a.xht	?	
+html4/t421-rgb-clip-outside-gamut-b.htm	pass		2013-12-13 18:05:25
+xhtml1/t421-rgb-clip-outside-gamut-b.xht	?	
+html4/t421-rgb-func-int-a.htm	pass		2013-12-13 18:05:28
+xhtml1/t421-rgb-func-int-a.xht	?	
+html4/t421-rgb-func-no-mixed-f.htm	pass		2013-12-13 18:05:29
+xhtml1/t421-rgb-func-no-mixed-f.xht	?	
+html4/t421-rgb-func-pct-a.htm	pass		2013-12-13 18:05:31
+xhtml1/t421-rgb-func-pct-a.xht	?	
+html4/t421-rgb-func-whitespace-b.htm	pass		2013-12-13 18:05:32
+xhtml1/t421-rgb-func-whitespace-b.xht	?	
+html4/t421-rgb-hex-parsing-f.htm	pass		2013-12-13 18:05:38
+xhtml1/t421-rgb-hex-parsing-f.xht	?	
+html4/t421-rgb-hex3-a.htm	pass		2013-12-13 18:05:39
+xhtml1/t421-rgb-hex3-a.xht	?	
+html4/t421-rgb-hex3-expand-b.htm	pass		2013-12-13 18:05:45
+xhtml1/t421-rgb-hex3-expand-b.xht	?	
+html4/t421-rgb-hex6-a.htm	pass		2013-12-13 18:05:46
+xhtml1/t421-rgb-hex6-a.xht	?	
+html4/t421-rgb-values-meaning-b.htm	pass		2013-12-13 18:06:23
+xhtml1/t421-rgb-values-meaning-b.xht	?	
+html4/t422-rgba-a0.0-a.htm	pass		2013-12-13 18:06:30
+xhtml1/t422-rgba-a0.0-a.xht	?	
+html4/t422-rgba-a0.6-a.htm	pass		2013-12-13 18:06:31
+xhtml1/t422-rgba-a0.6-a.xht	?	
+html4/t422-rgba-a1.0-a.htm	pass		2013-12-13 18:06:32
+xhtml1/t422-rgba-a1.0-a.xht	?	
+html4/t422-rgba-clamping-a0.0-b.htm	pass		2013-12-13 18:06:33
+xhtml1/t422-rgba-clamping-a0.0-b.xht	?	
+html4/t422-rgba-clamping-a1.0-b.htm	pass		2013-12-13 18:06:34
+xhtml1/t422-rgba-clamping-a1.0-b.xht	?	
+html4/t422-rgba-clip-outside-device-gamut-b.htm	pass		2013-12-13 18:06:38
+xhtml1/t422-rgba-clip-outside-device-gamut-b.xht	?	
+html4/t422-rgba-func-int-a.htm	pass		2013-12-13 18:06:39
+xhtml1/t422-rgba-func-int-a.xht	?	
+html4/t422-rgba-func-no-mixed-f.htm	pass		2013-12-13 18:06:40
+xhtml1/t422-rgba-func-no-mixed-f.xht	?	
+html4/t422-rgba-func-pct-a.htm	pass		2013-12-13 18:06:41
+xhtml1/t422-rgba-func-pct-a.xht	?	
+html4/t422-rgba-func-whitespace-b.htm	pass		2013-12-13 18:06:41
+xhtml1/t422-rgba-func-whitespace-b.xht	?	
+html4/t422-rgba-onscreen-b.htm	pass		2013-12-13 18:06:42
+xhtml1/t422-rgba-onscreen-b.xht	?	
+html4/t422-rgba-onscreen-multiple-boxes-c.htm	pass		2013-12-13 18:06:44
+xhtml1/t422-rgba-onscreen-multiple-boxes-c.xht	?	
+html4/t422-rgba-values-meaning-b.htm	pass		2013-12-13 18:07:05
+xhtml1/t422-rgba-values-meaning-b.xht	?	
+html4/t423-transparent-1-a.htm	pass		2013-12-13 18:07:12
+xhtml1/t423-transparent-1-a.xht	?	
+html4/t423-transparent-2-a.htm	pass		2013-12-13 18:07:13
+xhtml1/t423-transparent-2-a.xht	?	
+html4/t424-hsl-basic-a.htm	pass		2013-12-13 18:07:18
+xhtml1/t424-hsl-basic-a.xht	?	
+html4/t424-hsl-clip-outside-gamut-b.htm	pass		2013-12-13 18:07:20
+xhtml1/t424-hsl-clip-outside-gamut-b.xht	?	
+html4/t424-hsl-h-rotating-b.htm	pass		2013-12-13 18:07:21
+xhtml1/t424-hsl-h-rotating-b.xht	?	
+html4/t424-hsl-parsing-f.htm	pass		2013-12-13 18:07:22
+xhtml1/t424-hsl-parsing-f.xht	?	
+html4/t424-hsl-values-b.htm	pass		2013-12-13 18:07:38
+xhtml1/t424-hsl-values-b.xht	?	
+html4/t425-hsla-basic-a.htm	pass		2013-12-13 18:07:46
+xhtml1/t425-hsla-basic-a.xht	?	
+html4/t425-hsla-clip-outside-device-gamut-b.htm	pass		2013-12-13 18:07:50
+xhtml1/t425-hsla-clip-outside-device-gamut-b.xht	?	
+html4/t425-hsla-h-rotating-b.htm	pass		2013-12-13 18:07:51
+xhtml1/t425-hsla-h-rotating-b.xht	?	
+html4/t425-hsla-onscreen-b.htm	pass		2013-12-13 18:07:52
+xhtml1/t425-hsla-onscreen-b.xht	?	
+html4/t425-hsla-onscreen-multiple-boxes-c.htm	pass		2013-12-13 18:07:53
+xhtml1/t425-hsla-onscreen-multiple-boxes-c.xht	?	
+html4/t425-hsla-parsing-f.htm	pass		2013-12-13 18:07:55
+xhtml1/t425-hsla-parsing-f.xht	?	
+html4/t425-hsla-values-b.htm	pass		2013-12-13 18:08:04
+xhtml1/t425-hsla-values-b.xht	?	
+html4/t43-svg-keywords-a.htm	pass		2013-12-13 18:05:00
+xhtml1/t43-svg-keywords-a.xht	?	
+html4/t44-currentcolor-background-b.htm	pass		2013-12-13 18:08:19
+xhtml1/t44-currentcolor-background-b.xht	?	
+html4/t44-currentcolor-border-b.htm	pass		2013-12-13 18:08:21
+xhtml1/t44-currentcolor-border-b.xht	?	
+html4/t451-system-colors-a.htm	fail		2013-12-13 18:08:32
+xhtml1/t451-system-colors-a.xht	?	
