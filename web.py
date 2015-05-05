@@ -37,8 +37,8 @@ if options.weasyprint_version:
     VERSION = options.weasyprint_version
 
 STYLESHEET = CSS(string='''
-    @page { margin: 20px; size: 680px }
-    body { margin: 0 }
+    @page { margin: 0; size: 680px }
+    body { margin: 20px }
     :root { image-rendering: optimizespeed }
 ''')
 FOLDER = os.path.dirname(__file__)
