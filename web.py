@@ -1,34 +1,33 @@
-# coding: utf8
+#!/usr/bin/env python
 """
-    weasysuite.web
-    --------------
+weasysuite.web
+--------------
 
-    A simple web application to run, inspect and save the results of
-    the W3C CSS Test Suites.
+A simple web application to run, inspect and save the results of
+the W3C CSS Test Suites.
 
-    See http://test.csswg.org/suites/
-        http://www.w3.org/Style/CSS/Test/
-        http://test.csswg.org/
+See http://test.csswg.org/suites/
+    http://www.w3.org/Style/CSS/Test/
+    http://test.csswg.org/
 
-    :copyright: Copyright 2011-2012 Simon Sapin, 2013 Guillaume Ayoub
-    :license: BSD, see LICENSE for details.
+:copyright: Copyright 2011-2012 Simon Sapin, 2013-2015 Kozea
+:license: BSD, see LICENSE for details.
 
 """
-
-from __future__ import division, unicode_literals
 
 import os
 import sys
 import fileinput
 import optparse
+from base64 import b64encode
 from datetime import datetime
 
 import lxml.html
+from weasyprint import HTML, CSS, VERSION
 from flask import (
     Flask, render_template, abort, send_from_directory, safe_join,
     redirect, request, url_for)
 
-from weasyprint import HTML, CSS, VERSION
 
 parser = optparse.OptionParser(version=VERSION)
 parser.add_option('-V', '--weasyprint-version', default=VERSION)
@@ -39,8 +38,7 @@ if options.weasyprint_version:
 STYLESHEET = CSS(string='''
     @page { margin: 0; size: 680px }
     body { margin: 20px }
-    :root { image-rendering: optimizespeed }
-''')
+    :root { image-rendering: optimizespeed }''')
 FOLDER = os.path.dirname(__file__)
 OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'png')
 # Changing these values isn't enough to test another format, but it's better
@@ -62,7 +60,6 @@ for suite in os.listdir(BASE_PATH):
         BASE_PATH, suite, date, SUITES[suite]['format'], 'reftest.list')
     with open(filename) as fd:
         for line in fd.readlines():
-            line = line.decode('ascii')
             # Remove comments
             line = line.split('#', 1)[0]
             if not line.strip():
@@ -337,8 +334,8 @@ def run(suite_directory):
             HTML(filename, encoding='utf8', media_type=media_type)
             .render(stylesheets=stylesheets, enable_hinting=True))
         pages = [
-            'data:image/png;base64,' + document.copy([page])
-            .write_png()[0].encode('base64').replace('\n', '')
+            'data:image/png;base64,' +
+            b64encode(document.copy([page]).write_png()[0]).decode()
             for page in document.pages]
         return render_template('render.html', **locals())
 
