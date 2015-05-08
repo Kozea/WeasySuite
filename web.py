@@ -69,14 +69,20 @@ for suite in os.listdir(BASE_PATH):
                 # Comment-only line
                 continue
             parts = line.split()
-            comparaison = parts[0]
+            if parts[0] in ('==', '!='):
+                comparaison_index = 0
+                test_index = 1
+            elif parts[1] in ('==', '!='):
+                comparaison_index = 1
+                test_index = 0
+            else:
+                raise ValueError(line)
+            comparaison = parts[comparaison_index]
             if comparaison == '==':
                 equal = True
             elif comparaison == '!=':
                 equal = False
-            else:
-                raise ValueError(line)
-            test = parts[1].split('.')[0]
+            test = parts[test_index].split('.')[0]
             references = [part.split('.')[0] for part in parts[2:]]
             assert references, 'No reference'
             if test not in REFERENCES:
@@ -99,7 +105,6 @@ def read_testinfo(suite_directory):
 
 
 def read_chapter(filename, tests_by_link):
-    # TODO: fix this CSS21-only line
     index_filename = os.path.join(
         os.path.dirname(os.path.dirname(filename)), 'index.%s' % EXTENSION)
     if not os.path.isfile(index_filename):
@@ -131,14 +136,15 @@ def read_toc(suite_directory, tests_by_link):
 
 def prepare_test_data(suite_directory, version=VERSION):
     suites = {}
-    tests_by_link = {}
     suites_directory = os.path.abspath(os.path.join(suite_directory, 'suites'))
     for suite in os.listdir(suites_directory):
+        tests_by_link = {}
         date, = os.listdir(os.path.join(suites_directory, suite))
         path = os.path.join(suites_directory, suite, date)
         tests = {}
         for test in read_testinfo(path):
             for link in test['links']:
+                link = link.split('/')[-1]
                 tests[test['test_id']] = test
                 tests_by_link.setdefault(link, []).append(test)
         chapters = list(read_toc(path, tests_by_link))
