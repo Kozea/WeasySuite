@@ -1,9 +1,0 @@
-<!doctype html>
-<title>Test Suites</title>
-<link rel=stylesheet href="{{ url_for('static', filename='style.css') }}" />
-<h1>Test Suites</h1>
-<ul>
-{% for suite in suites %}
-  <li><a href="{{ url_for('suite', suite=suite ) }}">{{ suite }}</a>
-{% endfor %}
-</ul>

@@ -1,0 +1,71 @@
+{% extends '_layout.jinja2' %}
+
+{% set title='Table of tests' %}
+
+{% block nav %}
+  <ul>
+    <li><a href='{{ url_for('toc') }}'>Test suites</a></li>
+    <li><a href='{{ url_for('suite', suite=suite) }}'>{{ suite }}</a></li>
+    <li>{{ title }}</li>
+  </ul>
+{% endblock nav %}
+
+{% block main %}
+  <table>
+    <thead>
+      <tr>
+        <th>Testcase</th>
+        {% for version in all_suites | sort %}
+          <th>{{ version }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    {% for (name, sections, number) in chapters %}
+      {% set chapter_num = loop.index %}
+      {% for (name, link, tests) in sections %}
+        {% set section_num = loop.index %}
+        <tbody>
+          <tr>
+            <th colspan='{{ (all_suites | length) + 1 }}' scope='rowgroup'>
+              <a href='{{ link }}'>{{ name }}</a>
+            </th>
+          </tr>
+          {% for test in tests %}
+            {% set test_index = loop.index %}
+            <tr>
+              <td class='primary'>
+                <a href="{{ url_for('run_test', suite=suite, chapter_num=chapter_num, section_num=section_num, test_index=test_index) }}">
+                  {{ test.test_id }}
+                </a>
+              </td>
+              {% for version in all_suites | sort %}
+                {% set version_test = all_suites[version][suite]['tests'][test.test_id] %}
+                <td class='{{ version_test.result }}'>{{ version_test.result }} {{ version_test.comment or '' }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      {% endfor %}
+    {% endfor %}
+    <tfoot>
+      <tr class='pass'>
+        <th>Passed</th>
+        {% for version, version_results in results.items() | sort %}
+          <th>{{ (100 * version_results.pass / number) | round(2) }}%</th>
+        {% endfor %}
+      </tr>
+      <tr class='fail'>
+        <th>Failed</th>
+        {% for version, version_results in results.items() | sort %}
+          <th>{{ (100 * version_results.fail / number) | round(2) }}%</th>
+        {% endfor %}
+      </tr>
+      <tr>
+        <th>Coverage</th>
+        {% for version, version_results in results.items() | sort %}
+          <th>{{ (100 * version_results.count / number) | round(2) }}%</th>
+        {% endfor %}
+      </tr>
+    </tfoot>
+  </table>
+{% endblock main %}

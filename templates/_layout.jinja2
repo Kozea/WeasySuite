@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+  <head>
+    <title>WeasySuite - {{ title }}</title>
+    <link rel=stylesheet href="{{ url_for('static', filename='style.css') }}" />
+    <style>{% block css %}{% endblock css %}</style>
+  </head>
+
+  <body>
+    <header>
+      <h1>{{ title }}</h1>
+    </header>
+    <nav>{% block nav %}{% endblock nav %}</nav>
+    <main>{% block main %}{% endblock main %}</main>
+  </body>
+</html>

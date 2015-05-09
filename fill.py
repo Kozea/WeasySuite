@@ -22,6 +22,7 @@ OLD_VERSION = versions[versions.index(VERSION) - 1]
 suites, _ = prepare_test_data(FOLDER, version=VERSION)
 old_suites, _ = prepare_test_data(FOLDER, version=OLD_VERSION)
 
+# TODO: make this work with other suites
 suite_source = os.path.join(suites['css2.1']['path'], 'html4')
 
 print('Filling %s from %s' % (VERSION, OLD_VERSION))

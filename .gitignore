@@ -1,5 +1,3 @@
-*.pyc
-yacctab.py
-lextab.py
 results/0*/*-png
 suites
+__pycache__

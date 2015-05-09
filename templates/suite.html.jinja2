@@ -1,0 +1,38 @@
+{% extends '_layout.jinja2' %}
+
+{% set title=suite %}
+
+{% block nav %}
+  <ul>
+    <li><a href='{{ url_for('toc') }}'>Test suites</a></li>
+    <li>{{ suite }}</li>
+  </ul>
+{% endblock nav %}
+
+{% block main %}
+  <p>Total: {{ total }} tests (
+    {%- for label, grouped_tests in tests | groupby('result') | sort(0) %}
+      {%- if grouped_tests %}{{ grouped_tests | length }} {{ label }}{% if not loop.last %}, {% endif %}{% endif -%}
+    {% endfor -%}
+    ). See the <a href="{{ url_for('suite_results', suite=suite) }}">table of tests</a>.
+  </p>
+  {% for name, sections, test_number in chapters %}
+    <h2>{{ name }}</h2>
+    {% set chapter_num = loop.index %}
+    <ul>
+      {% for title, url, tests in sections %}
+        {% set section_num = loop.index %}
+        <li>
+          <a href="{{ url_for('section', suite=suite, chapter_num=chapter_num, section_num=section_num) }}">
+            {{ title }}
+          </a>,
+          {{ tests | length }} tests (
+          {%- for label, grouped_tests in tests | groupby('result') | sort(0) %}
+            {%- if grouped_tests | length %}{{ grouped_tests | length }} {{ label }}{% if not loop.last %}, {% endif %}{% endif -%}
+          {% endfor -%}
+          )
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% endblock main %}

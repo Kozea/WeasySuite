@@ -1,0 +1,32 @@
+{% extends '_layout.jinja2' %}
+
+{% block nav %}
+  <ul>
+    <li><a href='{{ url_for('toc') }}'>Test suites</a></li>
+    <li><a href='{{ url_for('suite', suite=suite) }}'>{{ suite }}</a></li>
+    <li>{{ chapter }}</li>
+    <li>{{ title }}</li>
+  </ul>
+{% endblock nav %}
+
+{% block main %}
+  <h2>{{ chapter }} - {{ title }}</h2>
+
+  {% if url %}
+    <p>Go to <a href="{{ url }}">the relevant page of the specification</a>.</p>
+  {% endif %}
+  
+  <dl>
+    {% for test in tests %}
+      <dt>
+        <a href="{{ url_for('run_test', suite=suite, chapter_num=chapter_num, section_num=section_num, test_index=loop.index) }}">
+          {{ test.test_id }}
+        </a>
+        {% if test.flags %}({{ test.flags | join(', ') }}){% endif %}
+      </dt>
+      <dd>
+        <em>{{ test.title }}</em> <br/>{{ test.assertion }}
+      </dd>
+    {% endfor %}
+  </dl>
+{% endblock main %}

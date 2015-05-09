@@ -52,7 +52,10 @@ SUITES = {}
 REFERENCES = {}
 
 for suite in os.listdir(BASE_PATH):
-    date, = os.listdir(os.path.join(BASE_PATH, suite))
+    suite_path = os.path.join(BASE_PATH, suite)
+    if not os.path.isdir(suite_path):
+        continue
+    date, = os.listdir(suite_path)
     formats = set(os.listdir(os.path.join(BASE_PATH, suite, date)))
     format = formats.intersection(FORMATS).pop()
     SUITES[suite] = {'date': date, 'format': format}
@@ -75,10 +78,7 @@ for suite in os.listdir(BASE_PATH):
             else:
                 raise ValueError(line)
             comparaison = parts[comparaison_index]
-            if comparaison == '==':
-                equal = True
-            elif comparaison == '!=':
-                equal = False
+            equal = comparaison == '=='
             test = parts[test_index].split('.')[0]
             references = [part.split('.')[0] for part in parts[2:]]
             assert references, 'No reference'
@@ -92,12 +92,12 @@ def read_testinfo(suite_directory):
         lines = iter(fd)
         next(lines)  # skip labels
         for line in lines:
-            test_id, references, title, flags, links, _, _, assertion = \
-                line.strip(' \n').split('\t')
+            test_id, references, title, flags, links, _, _, assertion = (
+                line.strip(' \n').split('\t'))
             yield dict(
                 test_id=test_id.lower(), assertion=assertion, title=title,
-                flags=(flags or '').split(','),
-                links=(links or '').split(','),
+                flags=flags.split(',') if flags else None,
+                links=links.split(',') if links else None,
                 references=REFERENCES.get(test_id, {}))
 
 
@@ -135,8 +135,11 @@ def prepare_test_data(suite_directory, version=VERSION):
     suites = {}
     suites_directory = os.path.abspath(os.path.join(suite_directory, 'suites'))
     for suite in os.listdir(suites_directory):
+        suite_path = os.path.join(suites_directory, suite)
+        if not os.path.isdir(suite_path):
+            continue
         tests_by_link = {}
-        date, = os.listdir(os.path.join(suites_directory, suite))
+        date, = os.listdir(suite_path)
         path = os.path.join(suites_directory, suite, date)
         tests = {}
         for test in read_testinfo(path):
@@ -175,7 +178,7 @@ def prepare_test_data(suite_directory, version=VERSION):
 
         for test in tests:
             if 'result' not in tests[test]:
-                tests[test]['result'] = 'not available'
+                tests[test]['result'] = 'unavailable'
                 tests[test]['comment'] = None
                 tests[test]['date'] = None
 
@@ -193,161 +196,153 @@ def save_test(suite, test):
         sys.stdout.write(line)
 
 
-def run(suite_directory):
-    suites, tests_by_link = prepare_test_data(suite_directory)
+app = Flask(__name__)
 
-    app = Flask(__name__)
-    app.jinja_env.globals['len'] = len
 
-    @app.route('/')
-    def toc():
-        return render_template('.'.join(('toc', EXTENSION)), suites=suites)
+@app.route('/')
+def toc():
+    return render_template('toc.html.jinja2', suites=suites)
 
-    @app.route('/suite-<suite>/')
-    def suite(suite):
-        return render_template(
-            'suite.html', suite=suite, tests=suites[suite]['tests'].values(),
-            chapters=enumerate(suites[suite]['chapters'], 1),
-            total=len(suites[suite]['tests']))
 
-    @app.route('/suite-<suite>/results/')
-    def suite_results(suite):
-        all_suites = {}
-        for version in os.listdir(os.path.join(FOLDER, 'results')):
-            all_suites[version], _ = prepare_test_data(
-                suite_directory, version=version)
-        chapters = all_suites[VERSION][suite]['chapters']
-        results = {}
-        number = 0
-        for version in all_suites:
-            results[version] = {'pass': 0, 'fail': 0, 'count': 0}
-        for (name, sections, test_number) in chapters:
-            for name, link, tests in sections:
-                for test in tests:
-                    number += 1
-                    for version in all_suites:
-                        version_test = (all_suites[version][suite]
-                                        ['tests'][test['test_id']])
-                        if version_test['result'] != '?':
-                            results[version]['count'] += 1
-                        if version_test['result'] in results[version]:
-                            results[version][version_test['result']] += 1
+@app.route('/suite-<suite>/')
+def suite(suite):
+    return render_template(
+        'suite.html.jinja2', suite=suite,
+        tests=suites[suite]['tests'].values(),
+        chapters=suites[suite]['chapters'],
+        total=len(suites[suite]['tests']))
 
-        return render_template(
-            'suite_results.html', all_suites=all_suites, suite=suite,
-            chapters=chapters, number=number, results=results)
 
-    @app.route('/suite-<suite>/chapter<int:chapter_num>/')
-    def chapter(suite, chapter_num):
-        try:
-            title, sections, _ = suites[suite]['chapters'][chapter_num - 1]
-        except IndexError:
-            abort(404)
-        return render_template(
-            'chapter.html', suite=suite, chapter_num=chapter_num,
-            chapter=title, sections=enumerate(sections, 1))
+@app.route('/suite-<suite>/results/')
+def suite_results(suite):
+    all_suites = {}
+    for version in os.listdir(os.path.join(FOLDER, 'results')):
+        all_suites[version], _ = prepare_test_data(FOLDER, version=version)
+    chapters = all_suites[VERSION][suite]['chapters']
+    results = {}
+    number = 0
+    for version in all_suites:
+        results[version] = {'pass': 0, 'fail': 0, 'count': 0}
+    for (name, sections, test_number) in chapters:
+        for name, link, tests in sections:
+            for test in tests:
+                number += 1
+                for version in all_suites:
+                    version_test = (
+                        all_suites[version][suite]['tests'][test['test_id']])
+                    if version_test['result'] != '?':
+                        results[version]['count'] += 1
+                    if version_test['result'] in results[version]:
+                        results[version][version_test['result']] += 1
 
-    @app.route('/suite-<suite>/chapter<int:chapter_num>/'
-               'section<int:section_num>/')
-    def section(suite, chapter_num, section_num):
+    return render_template(
+        'suite_results.html.jinja2', all_suites=all_suites, suite=suite,
+        chapters=chapters, number=number, results=results)
+
+
+@app.route('/suite-<suite>/chapter<int:chapter_num>/section<int:section_num>/')
+def section(suite, chapter_num, section_num):
+    try:
+        chapter, sections, _ = suites[suite]['chapters'][chapter_num - 1]
+        title, url, tests = sections[section_num - 1]
+    except IndexError:
+        abort(404)
+    return render_template('section.html.jinja2', **locals())
+
+
+@app.route('/test/suite-<suite>/<test_id>/')
+@app.route('/suite-<suite>/chapter<int:chapter_num>/'
+           'section<int:section_num>/test<int:test_index>/',
+           methods=('GET', 'POST'))
+def run_test(suite, chapter_num=None, section_num=None, test_index=None,
+             test_id=None):
+    if test_id is None:
         try:
             chapter, sections, _ = suites[suite]['chapters'][chapter_num - 1]
-            title, url, tests = sections[section_num - 1]
+            section, url, tests = sections[section_num - 1]
+            if len(tests) == test_index - 1:
+                return redirect(url_for(
+                    'section', suite=suite, chapter_num=chapter_num,
+                    section_num=section_num))
+            test = tests[test_index - 1]
+            test_id = test['test_id']
+            previous_index = test_index - 1
+            next_index = test_index + 1 if test_index < len(tests) else None
         except IndexError:
             abort(404)
-        return render_template('section.html', **locals())
+    else:
+        test = dict(test_id=test_id)
 
-    @app.route('/test/suite-<suite>/<test_id>/')
-    @app.route('/suite-<suite>/chapter<int:chapter_num>/'
-               'section<int:section_num>/test<int:test_index>/',
-               methods=('GET', 'POST'))
-    def run_test(suite, chapter_num=None, section_num=None,
-                 test_index=None, test_id=None):
-        if test_id is None:
-            try:
-                chapter, sections, _ = \
-                    suites[suite]['chapters'][chapter_num - 1]
-                title, url, tests = sections[section_num - 1]
-                test = tests[test_index - 1]
-                test_id = test['test_id']
-                previous_index = test_index - 1
-                next_index = \
-                    test_index + 1 if test_index < len(tests) else None
-            except IndexError:
-                abort(404)
+    if request.method == 'POST':
+        test['date'] = datetime(*datetime.utcnow().timetuple()[:6])
+        if request.form.get('next-result'):
+            test['result'] = request.form['next-result']
+            save_test(suite, test)
+            return redirect(url_for(
+                'run_test', suite=suite, chapter_num=chapter_num,
+                section_num=section_num, test_index=test_index + 1))
         else:
-            test = dict(test_id=test_id)
+            test['result'] = request.form['result']
+            test['comment'] = request.form['comment'].strip()
+            save_test(suite, test)
+            return redirect(request.path)
 
-        if request.method == 'POST':
-            test['date'] = datetime(*datetime.utcnow().timetuple()[:6])
-            if request.form.get('next-result'):
-                test['result'] = request.form['next-result']
-                save_test(suite, test)
-                return redirect(url_for(
-                    'run_test', suite=suite, chapter_num=chapter_num,
-                    section_num=section_num, test_index=test_index + 1))
-            else:
-                test['result'] = request.form['result']
-                test['comment'] = request.form['comment'].strip()
-                save_test(suite, test)
-                return redirect(request.path)
+    from pygments import highlight
+    from pygments.lexers import HtmlLexer
+    from pygments.formatters import HtmlFormatter
 
-        from pygments import highlight
-        from pygments.lexers import HtmlLexer
-        from pygments.formatters import HtmlFormatter
+    folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
+    filenames = [
+        filename for filename in os.listdir(folder)
+        if filename.lower().startswith(test_id + '.')]
+    if filenames:
+        filename = safe_join(folder, filenames[0])
+        with open(filename, 'rb') as fd:
+            try:
+                source = fd.read().decode('utf8')
+            except UnicodeDecodeError:
+                source = 'Non UTF-8 content'
 
-        folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
-        filenames = [
-            filename for filename in os.listdir(folder)
-            if filename.lower().startswith(test_id + '.')]
-        if filenames:
-            filename = safe_join(folder, filenames[0])
-            with open(filename, 'rb') as fd:
-                try:
-                    source = fd.read().decode('utf8')
-                except UnicodeDecodeError:
-                    source = "Non UTF-8 content"
+        formatter = HtmlFormatter(linenos='inline')
+        source = highlight(source, HtmlLexer(), formatter)
+        css = formatter.get_style_defs('.highlight')
+    stylesheet = request.args.get('stylesheet')
+    media_type = request.args.get('media_type')
+    return render_template('run_test.html.jinja2', **locals())
 
-            formatter = HtmlFormatter(linenos='inline')
-            source = highlight(source, HtmlLexer(), formatter)
-            css = formatter.get_style_defs('.highlight')
-        stylesheet = request.args.get('stylesheet')
-        media_type = request.args.get('media_type')
-        return render_template('run_test.html', **locals())
 
-    @app.route('/render/suite-<suite>/<path:test_id>')
-    @app.route('/render/suite-<suite>/<path:test_id>/media-<media_type>')
-    @app.route('/render/suite-<suite>/<path:test_id>/style-<stylesheet>')
-    def render(suite, test_id, media_type='print', stylesheet=None):
-        folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
-        stylesheets = [STYLESHEET]
-        if stylesheet:
-            stylesheets.append(os.path.join(folder, 'support', stylesheet))
-        if '/' in test_id:
-            folder = os.path.join(folder, os.path.dirname(test_id))
-            test_id = os.path.basename(test_id)
-        filename, = [
-            filename for filename in os.listdir(folder)
-            if filename.lower().startswith(test_id + '.')]
-        filename = safe_join(folder, filename)
-        document = (
-            HTML(filename, encoding='utf8', media_type=media_type)
-            .render(stylesheets=stylesheets, enable_hinting=True))
-        pages = [
-            'data:image/png;base64,' +
-            b64encode(document.copy([page]).write_png()[0]).decode()
-            for page in document.pages]
-        return render_template('render.html', **locals())
+@app.route('/render/suite-<suite>/<path:test_id>')
+@app.route('/render/suite-<suite>/<path:test_id>/media-<media_type>')
+@app.route('/render/suite-<suite>/<path:test_id>/style-<stylesheet>')
+def render(suite, test_id, media_type='print', stylesheet=None):
+    folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
+    stylesheets = [STYLESHEET]
+    if stylesheet:
+        stylesheets.append(os.path.join(folder, 'support', stylesheet))
+    if '/' in test_id:
+        folder = os.path.join(folder, os.path.dirname(test_id))
+        test_id = os.path.basename(test_id)
+    filename, = [
+        filename for filename in os.listdir(folder)
+        if filename.lower().startswith(test_id + '.')]
+    filename = safe_join(folder, filename)
+    document = (
+        HTML(filename, encoding='utf8', media_type=media_type)
+        .render(stylesheets=stylesheets, enable_hinting=True))
+    pages = [
+        'data:image/png;base64,' +
+        b64encode(document.copy([page]).write_png()[0]).decode()
+        for page in document.pages]
+    return render_template('render.html.jinja2', **locals())
 
-    @app.route('/test-data/suite-<suite>/<path:filename>')
-    def test_data(suite, filename):
-        return send_from_directory(
-            safe_join(suites[suite]['path'], SUITES[suite]['format']),
-            filename)
 
-    app.run(debug=True)
+@app.route('/test-data/suite-<suite>/<path:filename>')
+def test_data(suite, filename):
+    return send_from_directory(
+        safe_join(suites[suite]['path'], SUITES[suite]['format']), filename)
 
 
 if __name__ == '__main__':
     print('Tested version is %s' % VERSION)
-    run(FOLDER)
+    suites, tests_by_link = prepare_test_data(FOLDER)
+    app.run(debug=True)

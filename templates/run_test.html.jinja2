@@ -1,0 +1,138 @@
+{% extends '_layout.jinja2' %}
+
+{% set title=test.test_id %}
+
+{% block css %}
+  {{ css }}
+{% endblock css %}
+
+{% block nav %}
+  <ul>
+    <li><a href='{{ url_for('toc') }}'>Test suites</a></li>
+    <li><a href='{{ url_for('suite', suite=suite) }}'>{{ suite }}</a></li>
+    <li>{{ chapter }}</li>
+    <li><a href="{{ url_for('section', suite=suite, chapter_num=chapter_num, section_num=section_num) }}">{{ section }}</a></li>
+    <li>{{ title }}</li>
+  </ul>
+  <ul>
+    {% for text, index in [('←', previous_index), ('→', next_index)] %}
+      <li>
+        <a{% if index %} href="{{ url_for('run_test', suite=suite, chapter_num=chapter_num, section_num=section_num, test_index=index)}}"{% endif %}>
+          {{ text }}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock nav %}
+
+{% block main %}
+  <h2>{{ test.title }}</h2>
+
+  <form class="{{ test.result }}" method="POST">
+    <fieldset>
+      <input type="submit" name="next-result" value="pass" accesskey="p" />
+      <input type="submit" name="next-result" value="fail" accesskey="f" />
+      <input type="submit" name="next-result" value="na" accesskey="n" />
+    </fieldset>
+
+    <fieldset>
+      <label>Result {% if test.date %}({{ test.date }}){% endif %}</label>
+      {% for result, label in (('?', 'Unknown'), ('pass', 'Pass'), ('fail', 'Fail'), ('na', 'Not Applicable')) %}
+        <label for="result-{{ result }}">
+          <input type="radio" name="result" id="result-{{ result }}" value="{{ result }}" {{ 'checked' if result == test.result }} />
+          {{ label }}
+        </label>
+      {% endfor %}
+      <label for="comment">Comment</label>
+      <textarea name="comment" id="comment">{{ test.comment or '' }}</textarea>
+      <input type="submit" value="Submit" />
+    </fieldset>
+  </form>
+  
+  {% if source %}
+    <section class="weasy">
+      <h3>WeasyPrint</h3>
+      <iframe src="{{ url_for('render', suite=suite, test_id=test.test_id, media_type=media_type, stylesheet=stylesheet) }}"></iframe>
+    </section>
+
+    {% for equal, references in test.references.items() %}
+      {% for reference in references %}
+        <section class="weasy">
+          <h3>Reference ({{ 'good' if equal else 'bad' }})</h3>
+          <iframe src="{{ url_for('render', suite=suite, test_id=reference) }}"></iframe>
+        </section>
+      {% endfor %}
+    {% endfor %}
+
+    <section class="browser">
+      <h3>This browser</h3>
+      <iframe src="{{ url_for('test_data', suite=suite, filename=test.test_id + '.htm') }}"></iframe>
+    </section>
+  {% endif %}
+
+  <dl>
+    {% if test.flags %}
+      <dt>Flags</dt>
+      <dd>{{ test.flags|join(', ') }}</dd>
+    {% endif %}
+    {% if test.assertion %}
+      <dt>Assertion</dt>
+      <dd>{{ test.assertion }}</dd>
+    {% endif %}
+  </dl>
+
+  {% if source %}
+    <h3>Source</h3>
+    {{ source | safe }}
+  {% else %}
+    <p>This test is not available in this suite.
+  {% endif %}
+{% endblock main %}
+
+<style>
+    body {
+        margin: 0 1em 1em;
+    }
+    header {
+        display: block;
+        margin: 1em 0;
+    }
+    h1, h2 {
+        display: inline;
+        margin-right: 1em;
+    }
+    section {
+        display: table-cell;
+        padding-right: 1em;
+    }
+    h3 {
+        margin: 0;
+    }
+    .weasy iframe {
+        width: 720px;
+        height: 720px;
+        margin-left: -10px;
+        border: 0;
+    }
+    .browser iframe {
+        margin-top: 10px;
+        border: 2px inset;
+        padding: 0;
+        width: 680px;
+        height: 680px;
+        box-sizing: content-box;
+    }
+    pre {
+        white-space: pre-wrap;
+        padding-left: 3em;
+    }
+    .lineno {
+        margin-left: -3em;
+        margin-right: -1ex; /* fallback */
+        margin-right: -1ch;
+        width: 3em;
+        display: inline-block;
+    }
+
+    {{ css }}
+</style>

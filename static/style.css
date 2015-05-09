@@ -1,33 +1,198 @@
+/* Body */
+
+body {
+  color: rgba(20, 30, 20, 0.9);
+  font-family: 'Source Sans Pro';
+  margin: 0;
+}
+
+
+/* Header */
+
+header {
+  background: black;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  color: white;
+  font-weight: 300;
+  padding: 1em;
+  position: relative;
+  z-index: 2;
+}
+
+header:before {
+  content: 'WeasySuite';
+}
+
+h1 {
+  font-weight: 300;
+  margin: 0;
+}
+
+
+/* Nav */
+
 nav {
-    font-size: 1.5em;
-    margin: 0;
-    position: fixed;
-    top: 1em;
-    right: 1em;
+  background: orange;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  padding: 0.5em 1.2em;
 }
+
+nav:empty {
+  display: none;
+}
+
+nav ul {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  display: inline-block;
+  margin-right: 0.5em;
+}
+
+nav ul:first-child li:not(li:first-child):before {
+  content: '→';
+  margin-right: 0.5em;
+}
+
 nav a {
-    text-decoration: none;
-    margin-left: 1em;
-    color: inherit;
+  color: inherit;
 }
+
 nav a:not([href]) {
-    opacity: .2;
+  opacity: .2;
 }
+
+
+/* Main */
+
+main {
+  padding: 1em;
+  position: relative;
+}
+
+h2, h3 {
+  font-weight: normal;
+  margin: 0.5em 0 0;
+}
+
+main a {
+  color: purple;
+}
+
+main a:visited {
+  color: green;
+}
+
+main dd {
+  margin-left: 2em;
+}
+
+
+/* Forms */
+
 label {
-    display: block;
+  display: block;
 }
+
 form {
-    display: block;
-    background: rgba(0, 0, 0, 0.1);
-    float: right;
-    padding: 1em;
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: block;
+  position: absolute;
+  top: 1em;
+  right: 1em;
 }
-form.pass, tr.pass {
-    background: rgba(0, 255, 0, 0.2);
+
+fieldset {
+  border: none;
+  clear: right;
+  float: right;
+  margin: 0;
+  padding: 0.5em;
 }
-form.fail, tr.fail {
-    background: rgba(255, 0, 0, 0.2);
+
+fieldset + fieldset {
+  display: none;
 }
-form.na, tr.na {
-    background: rgba(0, 0, 255, 0.2);
+
+fieldset:hover, fieldset:hover + fieldset {
+  display: block;
+}
+
+input, textarea {
+  color: black;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+input:hover, input:focus, textarea:hover, textarea:focus {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+textarea {
+  display: block;
+}
+
+.pass input[value="pass"], td.pass {
+  background: rgba(0, 255, 0, 0.2);
+}
+
+.fail input[value="fail"], td.fail {
+  background: rgba(255, 0, 0, 0.2);
+}
+
+.na input[value="na"], td.na {
+  background: rgba(0, 0, 255, 0.2);
+}
+
+pre {
+  overflow-x: auto;
+}
+
+section {
+  display: table-cell;
+  padding-right: 1em;
+}
+
+.weasy iframe {
+  width: 720px;
+  height: 720px;
+  margin-left: -10px;
+  border: 0;
+}
+
+.browser iframe {
+  box-shadow: 0 0 10px 2px #aaa;
+  margin-top: 10px;
+  border: none;
+  width: 680px;
+  height: 680px;
+  box-sizing: content-box;
+}
+
+
+/* Table of tests */
+
+table {
+  border-collapse: collapse;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+th, td {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.2em;
+}
+
+th[scope="rowgroup"] {
+  border-left-color: transparent;
+  border-right-color: transparent;
+  padding-top: 0.5em;
+}
+
+td {
+  font-size: 0.8em;
 }
