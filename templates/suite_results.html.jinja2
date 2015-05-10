@@ -15,7 +15,7 @@
     <thead>
       <tr>
         <th>Testcase</th>
-        {% for version in all_suites | sort %}
+        {% for version in results | sort %}
           <th>{{ version }}</th>
         {% endfor %}
       </tr>
@@ -26,7 +26,7 @@
         {% set section_num = loop.index %}
         <tbody>
           <tr>
-            <th colspan='{{ (all_suites | length) + 1 }}' scope='rowgroup'>
+            <th colspan='{{ (results | length) + 1 }}' scope='rowgroup'>
               <a href='{{ link }}'>{{ name }}</a>
             </th>
           </tr>
@@ -38,8 +38,8 @@
                   {{ test.test_id }}
                 </a>
               </td>
-              {% for version in all_suites | sort %}
-                {% set version_test = all_suites[version][suite]['tests'][test.test_id] %}
+              {% for version in results | sort %}
+                {% set version_test = results[version][test.test_id] %}
                 <td class='{{ version_test.result }}'>{{ version_test.result }} {{ version_test.comment or '' }}</td>
               {% endfor %}
             </tr>

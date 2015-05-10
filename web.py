@@ -22,6 +22,7 @@ import io
 import json
 import optparse
 from base64 import b64encode
+from copy import deepcopy
 from datetime import datetime
 from urllib.request import urlopen
 from zipfile import ZipFile
@@ -57,6 +58,9 @@ except:
     ALL_SUITES = {}
 
 
+app = Flask(__name__)
+
+
 def add_suite(suite):
     if suite in SUITES:
         del SUITES[suite]
@@ -64,21 +68,20 @@ def add_suite(suite):
     if not os.path.isdir(suite_path):
         return
     date, = os.listdir(suite_path)
-    formats = set(os.listdir(os.path.join(BASE_PATH, suite, date)))
+    suite_path = os.path.join(suite_path, date)
+    formats = set(os.listdir(suite_path))
     format = [format for format in formats if format.startswith('html')].pop()
     name = suite
     if ALL_SUITES.get(suite):
         name = ALL_SUITES[suite].get('name', suite)
-    SUITES[suite] = {'date': date, 'format': format, 'name': name}
-    filename = os.path.join(
-        BASE_PATH, suite, date, SUITES[suite]['format'], 'reftest.list')
+    filename = os.path.join(suite_path, format, 'reftest.list')
     with open(filename) as fd:
         for line in fd.readlines():
             # Remove comments
             line = line.split('#', 1)[0]
             if not line.strip():
                 # Comment-only line
-                return
+                continue
             parts = line.split()
             if parts[0] in ('==', '!='):
                 comparaison_index = 0
@@ -97,70 +100,40 @@ def add_suite(suite):
                 REFERENCES[test] = {}
             REFERENCES[test][equal] = references
 
+    tests_by_link = {}
+    current_tests = {}
+    for test in read_testinfo(suite_path):
+        for link in test['links']:
+            link = link.split('/')[-1]
+            current_tests[test['test_id']] = test
+            tests_by_link.setdefault(link, []).append(test)
 
-def read_testinfo(suite_directory):
-    with open(os.path.join(suite_directory, 'testinfo.data')) as fd:
-        lines = iter(fd)
-        next(lines)  # skip labels
-        for line in lines:
-            test_id, references, title, flags, links, _, _, assertion = (
-                line.strip(' \n').split('\t'))
-            yield dict(
-                test_id=test_id.lower(), assertion=assertion, title=title,
-                flags=flags.split(',') if flags else None,
-                links=links.split(',') if links else None,
-                references=REFERENCES.get(test_id, {}))
-
-
-def read_chapter(filename, tests_by_link):
-    index_filename = os.path.join(
-        os.path.dirname(os.path.dirname(filename)), 'index.html')
-    if not os.path.isfile(index_filename):
-        index_filename = index_filename[:-1]
-    url_prefix = lxml.html.parse(index_filename).xpath(
-        '//a[starts-with(@href, "http://www.w3.org/TR/")]')[0].get('href')
-    for link in lxml.html.parse(filename).xpath(
-            '//th/a[starts-with(@href, "%s")]' % url_prefix):
-        url = link.get('href')[len(url_prefix):]
-        if url in tests_by_link:
-            yield (
-                link.text_content().strip(), link.get('href'),
-                tests_by_link[url])
-
-
-def read_toc(suite_directory, tests_by_link):
-    suite = os.path.basename(os.path.dirname(suite_directory))
-    suite_directory = os.path.join(suite_directory, SUITES[suite]['format'])
-    filename = os.path.join(suite_directory, 'toc.html')
+    chapters = []
+    suite_path = os.path.join(suite_path, format)
+    filename = os.path.join(suite_path, 'toc.html')
     if not os.path.isfile(filename):
         filename = filename[:-1]
     for link in lxml.html.parse(filename).xpath('//table//a[@href]'):
-        filename = os.path.join(suite_directory, link.get('href'))
+        filename = os.path.join(suite_path, link.get('href'))
         sections = list(read_chapter(filename, tests_by_link))
         if sections:
             num = sum(len(tests) for _, _, tests in sections)
-            yield (link.text_content().strip(), sections, num)
+            chapters.append((link.text_content().strip(), sections, num))
 
+    SUITES[suite] = {
+        'date': date, 'format': format, 'name': name, 'results': {},
+        'path': suite_path, 'chapters': chapters}
 
-def prepare_test_data(suite_directory, version=VERSION):
-    suites = {}
-    suites_directory = os.path.abspath(os.path.join(suite_directory, 'suites'))
-    for suite in os.listdir(suites_directory):
-        suite_path = os.path.join(suites_directory, suite)
-        if not os.path.isdir(suite_path):
-            continue
-        tests_by_link = {}
-        date, = os.listdir(suite_path)
-        path = os.path.join(suites_directory, suite, date)
-        tests = {}
-        for test in read_testinfo(path):
-            for link in test['links']:
-                link = link.split('/')[-1]
-                tests[test['test_id']] = test
-                tests_by_link.setdefault(link, []).append(test)
-        chapters = list(read_toc(path, tests_by_link))
-        suites[suite] = {'path': path, 'tests': tests, 'chapters': chapters}
-
+    # Set VERSION at the end to duplicate the tests dict for all other versions
+    versions = [
+        version for version in os.listdir(os.path.join(FOLDER, 'results'))
+        if version != VERSION] + [VERSION]
+    for version in versions:
+        if version == VERSION:
+            tests = current_tests
+        else:
+            tests = deepcopy(current_tests)
+        SUITES[suite]['results'][version] = tests
         filename = os.path.join(FOLDER, 'results', version, suite)
         if os.path.isfile(filename):
             results = iter(open(filename).readlines())
@@ -193,7 +166,35 @@ def prepare_test_data(suite_directory, version=VERSION):
                 tests[test]['comment'] = None
                 tests[test]['date'] = None
 
-    return suites
+
+def read_testinfo(suite_directory):
+    with open(os.path.join(suite_directory, 'testinfo.data')) as fd:
+        lines = iter(fd)
+        next(lines)  # skip labels
+        for line in lines:
+            test_id, references, title, flags, links, _, _, assertion = (
+                line.strip(' \n').split('\t'))
+            yield dict(
+                test_id=test_id.lower(), assertion=assertion, title=title,
+                flags=flags.split(',') if flags else None,
+                links=links.split(',') if links else None,
+                references=REFERENCES.get(test_id, {}))
+
+
+def read_chapter(filename, tests_by_link):
+    index_filename = os.path.join(
+        os.path.dirname(os.path.dirname(filename)), 'index.html')
+    if not os.path.isfile(index_filename):
+        index_filename = index_filename[:-1]
+    url_prefix = lxml.html.parse(index_filename).xpath(
+        '//a[starts-with(@href, "http://www.w3.org/TR/")]')[0].get('href')
+    for link in lxml.html.parse(filename).xpath(
+            '//th/a[starts-with(@href, "%s")]' % url_prefix):
+        url = link.get('href')[len(url_prefix):]
+        if url in tests_by_link:
+            yield (
+                link.text_content().strip(), link.get('href'),
+                tests_by_link[url])
 
 
 def save_test(suite, test):
@@ -205,9 +206,6 @@ def save_test(suite, test):
                 line.split('\t')[0], test['result'] or '?',
                 test['comment'] or '', str(test['date']))) + '\n'
         sys.stdout.write(line)
-
-
-app = Flask(__name__)
 
 
 @app.route('/', methods=('GET', 'POST'))
@@ -233,9 +231,9 @@ def suite(suite):
     suite_name = SUITES[suite]['name']
     return render_template(
         'suite.html.jinja2', suite=suite, suite_name=suite_name,
-        tests=suites[suite]['tests'].values(),
-        chapters=suites[suite]['chapters'],
-        total=len(suites[suite]['tests']))
+        tests=SUITES[suite]['results'][VERSION].values(),
+        chapters=SUITES[suite]['chapters'],
+        total=len(SUITES[suite]['results'][VERSION]))
 
 
 @app.route('/download-suite-<suite>/')
@@ -267,9 +265,8 @@ def download_suite(suite):
         name = name[:-11]
     if name.endswith(' Conformance'):
         name = name[:-12]
-    add_suite(suite)
-    prepare_test_data(FOLDER)
     ALL_SUITES[suite] = {'name': name}
+    add_suite(suite)
     with open(os.path.join(BASE_PATH, 'suites.json'), 'w') as fd:
         json.dump(ALL_SUITES, fd)
     return redirect(url_for('suite', suite=suite))
@@ -278,37 +275,32 @@ def download_suite(suite):
 @app.route('/suite-<suite>/results/')
 def suite_results(suite):
     suite_name = SUITES[suite]['name']
-    all_suites = {}
-    for version in os.listdir(os.path.join(FOLDER, 'results')):
-        all_suites[version] = prepare_test_data(FOLDER, version=version)
-    chapters = all_suites[VERSION][suite]['chapters']
-    results = {}
+    chapters = SUITES[suite]['chapters']
+    results = SUITES[suite]['results']
     number = 0
-    for version in all_suites:
-        results[version] = {'pass': 0, 'fail': 0, 'count': 0}
+    for version in results:
+        results[version].update({'pass': 0, 'fail': 0, 'count': 0})
     for (name, sections, test_number) in chapters:
         for name, link, tests in sections:
             for test in tests:
                 number += 1
-                for version in all_suites:
-                    version_test = (
-                        all_suites[version][suite]['tests'][test['test_id']])
+                for version in results:
+                    version_test = results[version][test['test_id']]
                     if version_test['result'] != '?':
                         results[version]['count'] += 1
                     if version_test['result'] in results[version]:
                         results[version][version_test['result']] += 1
 
     return render_template(
-        'suite_results.html.jinja2', all_suites=all_suites, suite=suite,
-        suite_name=suite_name, chapters=chapters, number=number,
-        results=results)
+        'suite_results.html.jinja2', suite=suite, suite_name=suite_name,
+        chapters=chapters, number=number, results=results)
 
 
 @app.route('/suite-<suite>/chapter<int:chapter_num>/section<int:section_num>/')
 def section(suite, chapter_num, section_num):
     suite_name = SUITES[suite]['name']
     try:
-        chapter, sections, _ = suites[suite]['chapters'][chapter_num - 1]
+        chapter, sections, _ = SUITES[suite]['chapters'][chapter_num - 1]
         title, url, tests = sections[section_num - 1]
     except IndexError:
         abort(404)
@@ -324,7 +316,7 @@ def run_test(suite, chapter_num=None, section_num=None, test_index=None,
     suite_name = SUITES[suite]['name']
     if test_id is None:
         try:
-            chapter, sections, _ = suites[suite]['chapters'][chapter_num - 1]
+            chapter, sections, _ = SUITES[suite]['chapters'][chapter_num - 1]
             section, url, tests = sections[section_num - 1]
             if len(tests) == test_index - 1:
                 return redirect(url_for(
@@ -357,12 +349,11 @@ def run_test(suite, chapter_num=None, section_num=None, test_index=None,
     from pygments.lexers import HtmlLexer
     from pygments.formatters import HtmlFormatter
 
-    folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
     filenames = [
-        filename for filename in os.listdir(folder)
+        filename for filename in os.listdir(SUITES[suite]['path'])
         if filename.lower().startswith(test_id + '.')]
     if filenames:
-        filename = safe_join(folder, filenames[0])
+        filename = safe_join(SUITES[suite]['path'], filenames[0])
         with open(filename, 'rb') as fd:
             try:
                 source = fd.read().decode('utf8')
@@ -381,7 +372,7 @@ def run_test(suite, chapter_num=None, section_num=None, test_index=None,
 @app.route('/render/suite-<suite>/<path:test_id>/media-<media_type>')
 @app.route('/render/suite-<suite>/<path:test_id>/style-<stylesheet>')
 def render(suite, test_id, media_type='print', stylesheet=None):
-    folder = safe_join(suites[suite]['path'], SUITES[suite]['format'])
+    folder = SUITES[suite]['path']
     stylesheets = [STYLESHEET]
     if stylesheet:
         stylesheets.append(os.path.join(folder, 'support', stylesheet))
@@ -404,13 +395,11 @@ def render(suite, test_id, media_type='print', stylesheet=None):
 
 @app.route('/test-data/suite-<suite>/<path:filename>')
 def test_data(suite, filename):
-    return send_from_directory(
-        safe_join(suites[suite]['path'], SUITES[suite]['format']), filename)
+    return send_from_directory(SUITES[suite]['path'], filename)
 
 
 if __name__ == '__main__':
     print('Tested version is %s' % VERSION)
     for suite in os.listdir(BASE_PATH):
         add_suite(suite)
-    suites = prepare_test_data(FOLDER)
     app.run(debug=True)
