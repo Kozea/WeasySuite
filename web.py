@@ -102,7 +102,8 @@ def add_suite(suite):
 
     tests_by_link = {}
     current_tests = {}
-    for test in read_testinfo(suite_path):
+    all_tests = list(read_testinfo(suite_path))
+    for test in all_tests:
         for link in test['links']:
             link = link.split('/')[-1]
             current_tests[test['test_id']] = test
@@ -119,6 +120,19 @@ def add_suite(suite):
         if sections:
             num = sum(len(tests) for _, _, tests in sections)
             chapters.append((link.text_content().strip(), sections, num))
+
+    found_tests = set()
+    unknown_tests = []
+    for _, sections, _ in chapters:
+        for section in sections:
+            for test in section[2]:
+                found_tests.add(test['test_id'])
+    for test in all_tests:
+        if test['test_id'] not in found_tests:
+            unknown_tests.append(test)
+    if unknown_tests:
+        chapters.append(
+            ('Unknown', [('Unknown', '', unknown_tests)], len(unknown_tests)))
 
     SUITES[suite] = {
         'date': date, 'format': format, 'name': name, 'results': {},
@@ -200,6 +214,17 @@ def read_chapter(filename, tests_by_link):
 def save_test(suite, test):
     format = SUITES[suite]['format']
     filename = os.path.join(FOLDER, 'results', VERSION, suite)
+    if not os.path.exists(os.path.dirname(filename)):
+        os.mkdir(os.path.dirname(filename))
+    if not os.path.exists(filename):
+        path = os.path.join(
+            os.path.dirname(SUITES[suite]['path']),
+            'implementation-report-TEMPLATE.data')
+        lines = open(path).readlines()
+        lines[0] = '# WeasyPrint %s\n' % VERSION
+        lines[1] = '#\n'
+        lines[2] = lines[2].replace('DATESTAMP', SUITES[suite]['date'])
+        open(filename, 'w').write(''.join(lines))
     for line in fileinput.input(filename, inplace=1):
         if line.startswith('/'.join((format, test['test_id'] + '.'))):
             line = '\t'.join((
