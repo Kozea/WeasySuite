@@ -18,9 +18,13 @@ See http://test.csswg.org/suites/
 import os
 import sys
 import fileinput
+import io
+import json
 import optparse
 from base64 import b64encode
 from datetime import datetime
+from urllib.request import urlopen
+from zipfile import ZipFile
 
 import lxml.html
 from weasyprint import HTML, CSS, VERSION
@@ -41,24 +45,31 @@ STYLESHEET = CSS(string='''
     :root { image-rendering: optimizespeed }''')
 FOLDER = os.path.dirname(__file__)
 OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'png')
-# Changing these values isn't enough to test another format, but it's better
-# than nothing
-FORMATS = ['html4', 'html']
-EXTENSION = 'html'
 BASE_PATH = os.path.join(FOLDER, 'suites')
 
 
 SUITES = {}
 REFERENCES = {}
 
-for suite in os.listdir(BASE_PATH):
+try:
+    ALL_SUITES = json.load(open(os.path.join(BASE_PATH, 'suites.json')))
+except:
+    ALL_SUITES = {}
+
+
+def add_suite(suite):
+    if suite in SUITES:
+        del SUITES[suite]
     suite_path = os.path.join(BASE_PATH, suite)
     if not os.path.isdir(suite_path):
-        continue
+        return
     date, = os.listdir(suite_path)
     formats = set(os.listdir(os.path.join(BASE_PATH, suite, date)))
-    format = formats.intersection(FORMATS).pop()
-    SUITES[suite] = {'date': date, 'format': format}
+    format = [format for format in formats if format.startswith('html')].pop()
+    name = suite
+    if ALL_SUITES.get(suite):
+        name = ALL_SUITES[suite].get('name', suite)
+    SUITES[suite] = {'date': date, 'format': format, 'name': name}
     filename = os.path.join(
         BASE_PATH, suite, date, SUITES[suite]['format'], 'reftest.list')
     with open(filename) as fd:
@@ -67,7 +78,7 @@ for suite in os.listdir(BASE_PATH):
             line = line.split('#', 1)[0]
             if not line.strip():
                 # Comment-only line
-                continue
+                return
             parts = line.split()
             if parts[0] in ('==', '!='):
                 comparaison_index = 0
@@ -103,7 +114,7 @@ def read_testinfo(suite_directory):
 
 def read_chapter(filename, tests_by_link):
     index_filename = os.path.join(
-        os.path.dirname(os.path.dirname(filename)), 'index.%s' % EXTENSION)
+        os.path.dirname(os.path.dirname(filename)), 'index.html')
     if not os.path.isfile(index_filename):
         index_filename = index_filename[:-1]
     url_prefix = lxml.html.parse(index_filename).xpath(
@@ -120,7 +131,7 @@ def read_chapter(filename, tests_by_link):
 def read_toc(suite_directory, tests_by_link):
     suite = os.path.basename(os.path.dirname(suite_directory))
     suite_directory = os.path.join(suite_directory, SUITES[suite]['format'])
-    filename = os.path.join(suite_directory, '.'.join(('toc', EXTENSION)))
+    filename = os.path.join(suite_directory, 'toc.html')
     if not os.path.isfile(filename):
         filename = filename[:-1]
     for link in lxml.html.parse(filename).xpath('//table//a[@href]'):
@@ -182,7 +193,7 @@ def prepare_test_data(suite_directory, version=VERSION):
                 tests[test]['comment'] = None
                 tests[test]['date'] = None
 
-    return suites, tests_by_link
+    return suites
 
 
 def save_test(suite, test):
@@ -199,25 +210,77 @@ def save_test(suite, test):
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 def toc():
-    return render_template('toc.html.jinja2', suites=suites)
+    if request.method == 'POST':
+        data = urlopen('http://test.csswg.org/suites/')
+        suites = [
+            link.get('href')[:-5] for link in
+            lxml.html.parse(data).xpath('//a')
+            if link.get('href').endswith('_dev/')]
+        for suite in suites:
+            if suite not in ALL_SUITES:
+                ALL_SUITES[suite] = None
+        with open(os.path.join(BASE_PATH, 'suites.json'), 'w') as fd:
+            json.dump(ALL_SUITES, fd)
+    missing_suites = [suite for suite in ALL_SUITES if suite not in SUITES]
+    return render_template(
+        'toc.html.jinja2', suites=SUITES, missing_suites=missing_suites)
 
 
 @app.route('/suite-<suite>/')
 def suite(suite):
+    suite_name = SUITES[suite]['name']
     return render_template(
-        'suite.html.jinja2', suite=suite,
+        'suite.html.jinja2', suite=suite, suite_name=suite_name,
         tests=suites[suite]['tests'].values(),
         chapters=suites[suite]['chapters'],
         total=len(suites[suite]['tests']))
 
 
+@app.route('/download-suite-<suite>/')
+def download_suite(suite):
+    data = urlopen('http://test.csswg.org/suites/%s_dev/' % suite)
+    versions = [
+        link.get('href')[:-1] for link in lxml.html.parse(data).xpath('//a')
+        if link.get('href').endswith('/')]
+    if 'latest' in versions:
+        version = 'latest'
+    else:
+        assert 'nightly-unstable' in versions
+        version = 'nightly-unstable'
+    zip_data = urlopen(
+        'http://test.csswg.org/suites/%s_dev/%s.zip' % (suite, version))
+    zip_file = ZipFile(io.BytesIO(zip_data.read()))
+    os.mkdir(os.path.join(BASE_PATH, suite))
+    zip_file.extractall(os.path.join(BASE_PATH, suite))
+    folder, = os.listdir(os.path.join(BASE_PATH, suite))
+    index_file, = [
+        filename for filename in
+        os.listdir(os.path.join(BASE_PATH, suite, folder))
+        if filename.startswith('index.htm')]
+    name, = [
+        title.text for title in
+        lxml.html.parse(os.path.join(BASE_PATH, suite, folder, index_file))
+        .xpath('//title')]
+    if name.endswith(' Test Suite'):
+        name = name[:-11]
+    if name.endswith(' Conformance'):
+        name = name[:-12]
+    add_suite(suite)
+    prepare_test_data(FOLDER)
+    ALL_SUITES[suite] = {'name': name}
+    with open(os.path.join(BASE_PATH, 'suites.json'), 'w') as fd:
+        json.dump(ALL_SUITES, fd)
+    return redirect(url_for('suite', suite=suite))
+
+
 @app.route('/suite-<suite>/results/')
 def suite_results(suite):
+    suite_name = SUITES[suite]['name']
     all_suites = {}
     for version in os.listdir(os.path.join(FOLDER, 'results')):
-        all_suites[version], _ = prepare_test_data(FOLDER, version=version)
+        all_suites[version] = prepare_test_data(FOLDER, version=version)
     chapters = all_suites[VERSION][suite]['chapters']
     results = {}
     number = 0
@@ -237,11 +300,13 @@ def suite_results(suite):
 
     return render_template(
         'suite_results.html.jinja2', all_suites=all_suites, suite=suite,
-        chapters=chapters, number=number, results=results)
+        suite_name=suite_name, chapters=chapters, number=number,
+        results=results)
 
 
 @app.route('/suite-<suite>/chapter<int:chapter_num>/section<int:section_num>/')
 def section(suite, chapter_num, section_num):
+    suite_name = SUITES[suite]['name']
     try:
         chapter, sections, _ = suites[suite]['chapters'][chapter_num - 1]
         title, url, tests = sections[section_num - 1]
@@ -256,6 +321,7 @@ def section(suite, chapter_num, section_num):
            methods=('GET', 'POST'))
 def run_test(suite, chapter_num=None, section_num=None, test_index=None,
              test_id=None):
+    suite_name = SUITES[suite]['name']
     if test_id is None:
         try:
             chapter, sections, _ = suites[suite]['chapters'][chapter_num - 1]
@@ -344,5 +410,7 @@ def test_data(suite, filename):
 
 if __name__ == '__main__':
     print('Tested version is %s' % VERSION)
-    suites, tests_by_link = prepare_test_data(FOLDER)
+    for suite in os.listdir(BASE_PATH):
+        add_suite(suite)
+    suites = prepare_test_data(FOLDER)
     app.run(debug=True)

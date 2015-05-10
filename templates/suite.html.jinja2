@@ -1,11 +1,11 @@
 {% extends '_layout.jinja2' %}
 
-{% set title=suite %}
+{% set title=suite_name %}
 
 {% block nav %}
   <ul>
     <li><a href='{{ url_for('toc') }}'>Test suites</a></li>
-    <li>{{ suite }}</li>
+    <li>{{ title }}</li>
   </ul>
 {% endblock nav %}
 
