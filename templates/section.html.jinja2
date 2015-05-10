@@ -3,7 +3,7 @@
 {% block nav %}
   <ul>
     <li><a href='{{ url_for('toc') }}'>Test suites</a></li>
-    <li><a href='{{ url_for('suite', suite=suite) }}'>{{ suite }}</a></li>
+    <li><a href='{{ url_for('suite', suite=suite) }}'>{{ suite_name }}</a></li>
     <li>{{ chapter }}</li>
     <li>{{ title }}</li>
   </ul>
