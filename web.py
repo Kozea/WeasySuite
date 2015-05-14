@@ -224,6 +224,9 @@ def save_test(suite, test):
         lines[0] = '# WeasyPrint %s\n' % VERSION
         lines[1] = '#\n'
         lines[2] = lines[2].replace('DATESTAMP', SUITES[suite]['date'])
+        for i, line in enumerate(lines):
+            if line.startswith(format) and '/' in line:
+                lines[i] = '/'.join((format, line.split('/', 1)[1]))
         open(filename, 'w').write(''.join(lines))
     for line in fileinput.input(filename, inplace=1):
         if line.startswith('/'.join((format, test['test_id'] + '.'))):
