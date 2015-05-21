@@ -451,9 +451,9 @@ html4/allowed-page-breaks-003.htm	pass		2015-05-18 16:38:11
 xhtml1/allowed-page-breaks-003.xht	?	
 html4/allowed-page-breaks-004.htm	pass		2015-05-18 16:38:30
 xhtml1/allowed-page-breaks-004.xht	?	
-html4/allowed-page-breaks-005.htm	pass		2015-05-19 16:06:06
+html4/allowed-page-breaks-005.htm	fail		2015-05-21 06:57:56
 xhtml1/allowed-page-breaks-005.xht	?	
-html4/allowed-page-breaks-006.htm	fail		2015-05-19 16:06:16
+html4/allowed-page-breaks-006.htm	pass		2015-05-21 06:58:00
 xhtml1/allowed-page-breaks-006.xht	?	
 html4/allowed-page-breaks-007a.htm	pass		2015-05-19 16:06:18
 xhtml1/allowed-page-breaks-007a.xht	?	
@@ -636,7 +636,7 @@ html4/at-keywords-001.htm	pass		2015-04-29 19:43:02
 xhtml1/at-keywords-001.xht	?	
 html4/at-keywords-002.htm	pass		2015-04-29 19:43:03
 xhtml1/at-keywords-002.xht	?	
-html4/at-page-rule-001.htm	fail		2015-05-14 05:44:12
+html4/at-page-rule-001.htm	pass		2015-05-21 06:35:27
 xhtml1/at-page-rule-001.xht	?	
 html4/at-page-rule-002-a.htm	pass		2015-05-14 05:46:27
 xhtml1/at-page-rule-002-a.xht	?	
@@ -3634,7 +3634,7 @@ html4/border-conflict-element-038.htm	fail		2015-05-19 16:38:03
 xhtml1/border-conflict-element-038.xht	?	
 html4/border-conflict-element-039.htm	pass		2015-05-19 16:38:04
 xhtml1/border-conflict-element-039.xht	?	
-html4/border-conflict-example-001.htm	fail		2015-05-19 16:38:18
+html4/border-conflict-example-001.htm	pass		2015-05-21 06:48:21
 xhtml1/border-conflict-example-001.xht	?	
 html4/border-conflict-example-002.htm	pass		2015-05-19 16:38:21
 xhtml1/border-conflict-example-002.xht	?	
@@ -8750,7 +8750,7 @@ html4/data-alignment-001.htm	fail		2015-05-19 16:15:14
 xhtml1/data-alignment-001.xht	?	
 html4/data-alignment-002.htm	pass		2015-05-19 16:15:22
 xhtml1/data-alignment-002.xht	?	
-html4/data-alignment-003.htm	pass		2015-05-19 16:15:24
+html4/data-alignment-003.htm	fail		2015-05-21 06:45:02
 xhtml1/data-alignment-003.xht	?	
 html4/data-alignment-004.htm	pass		2015-05-19 16:15:26
 xhtml1/data-alignment-004.xht	?	
@@ -10684,7 +10684,7 @@ html4/font-family-applies-to-001.htm	pass		2015-05-18 17:04:50
 xhtml1/font-family-applies-to-001.xht	?	
 html4/font-family-applies-to-002.htm	pass		2015-05-18 17:04:51
 xhtml1/font-family-applies-to-002.xht	?	
-html4/font-family-applies-to-003.htm	fail		2015-05-18 17:05:02
+html4/font-family-applies-to-003.htm	pass		2015-05-21 06:36:16
 xhtml1/font-family-applies-to-003.xht	?	
 html4/font-family-applies-to-005.htm	pass		2015-05-18 17:05:05
 xhtml1/font-family-applies-to-005.xht	?	
@@ -10980,7 +10980,7 @@ html4/font-size-applies-to-001.htm	pass		2015-05-18 17:34:06
 xhtml1/font-size-applies-to-001.xht	?	
 html4/font-size-applies-to-002.htm	pass		2015-05-18 17:34:06
 xhtml1/font-size-applies-to-002.xht	?	
-html4/font-size-applies-to-003.htm	fail		2015-05-18 17:34:13
+html4/font-size-applies-to-003.htm	pass		2015-05-21 06:37:05
 xhtml1/font-size-applies-to-003.xht	?	
 html4/font-size-applies-to-005.htm	pass		2015-05-18 17:34:14
 xhtml1/font-size-applies-to-005.xht	?	
@@ -11993,7 +11993,7 @@ html4/letter-spacing-applies-to-001.htm	pass		2015-05-19 16:07:25
 xhtml1/letter-spacing-applies-to-001.xht	?	
 html4/letter-spacing-applies-to-002.htm	pass		2015-05-19 16:07:26
 xhtml1/letter-spacing-applies-to-002.xht	?	
-html4/letter-spacing-applies-to-003.htm	fail		2015-05-19 16:07:32
+html4/letter-spacing-applies-to-003.htm	pass		2015-05-21 06:38:05
 xhtml1/letter-spacing-applies-to-003.xht	?	
 html4/letter-spacing-applies-to-005.htm	pass		2015-05-19 16:07:33
 xhtml1/letter-spacing-applies-to-005.xht	?	
@@ -15591,7 +15591,7 @@ html4/page-break-inside-003.htm	pass		2015-05-18 16:42:44
 xhtml1/page-break-inside-003.xht	?	
 html4/page-break-inside-004.htm	pass		2015-05-18 16:42:51
 xhtml1/page-break-inside-004.xht	?	
-html4/page-break-inside-005.htm	fail		2015-05-19 16:07:46
+html4/page-break-inside-005.htm	pass		2015-05-21 06:58:17
 xhtml1/page-break-inside-005.xht	?	
 html4/page-break-inside-006.htm	pass		2015-05-18 16:42:58
 xhtml1/page-break-inside-006.xht	?	
@@ -15621,11 +15621,11 @@ html4/page-container-005.htm	fail		2015-05-14 05:45:51
 xhtml1/page-container-005.xht	?	
 html4/page-container-006.htm	pass		2015-05-14 05:45:57
 xhtml1/page-container-006.xht	?	
-html4/page-container-007.htm	pass		2015-05-04 16:56:56
+html4/page-container-007.htm	fail		2015-05-21 06:56:11
 xhtml1/page-container-007.xht	?	
 html4/page-container-008.htm	pass		2015-05-13 05:07:59
 xhtml1/page-container-008.xht	?	
-html4/page-container-009.htm	fail		2015-05-13 05:09:06
+html4/page-container-009.htm	pass		2015-05-21 06:56:35
 xhtml1/page-container-009.xht	?	
 html4/page-container-010.htm	pass		2015-05-13 05:23:22
 xhtml1/page-container-010.xht	?	
@@ -17459,7 +17459,7 @@ html4/text-indent-applies-to-001.htm	pass		2015-05-18 17:38:36
 xhtml1/text-indent-applies-to-001.xht	?	
 html4/text-indent-applies-to-002.htm	pass		2015-05-18 17:38:37
 xhtml1/text-indent-applies-to-002.xht	?	
-html4/text-indent-applies-to-003.htm	fail		2015-05-18 17:38:42
+html4/text-indent-applies-to-003.htm	pass		2015-05-21 06:37:19
 xhtml1/text-indent-applies-to-003.xht	?	
 html4/text-indent-applies-to-005.htm	pass		2015-05-18 17:38:43
 xhtml1/text-indent-applies-to-005.xht	?	
@@ -18015,7 +18015,7 @@ html4/vertical-align-applies-to-008.htm	pass		2015-05-13 05:32:30
 xhtml1/vertical-align-applies-to-008.xht	?	
 html4/vertical-align-applies-to-009.htm	pass		2015-05-13 05:32:34
 xhtml1/vertical-align-applies-to-009.xht	?	
-html4/vertical-align-applies-to-010.htm	fail		2015-05-13 05:32:47
+html4/vertical-align-applies-to-010.htm	pass		2015-05-21 06:34:16
 xhtml1/vertical-align-applies-to-010.xht	?	
 html4/vertical-align-applies-to-012.htm	pass		2015-05-13 05:32:48
 xhtml1/vertical-align-applies-to-012.xht	?	
@@ -18125,7 +18125,7 @@ html4/white-space-applies-to-001.htm	pass		2015-05-19 16:12:19
 xhtml1/white-space-applies-to-001.xht	?	
 html4/white-space-applies-to-002.htm	pass		2015-05-19 16:12:20
 xhtml1/white-space-applies-to-002.xht	?	
-html4/white-space-applies-to-003.htm	fail		2015-05-19 16:12:24
+html4/white-space-applies-to-003.htm	pass		2015-05-21 06:46:57
 xhtml1/white-space-applies-to-003.xht	?	
 html4/white-space-applies-to-005.htm	pass		2015-05-19 16:12:24
 xhtml1/white-space-applies-to-005.xht	?	
@@ -18623,7 +18623,7 @@ html4/word-spacing-applies-to-001.htm	pass		2015-05-19 16:08:50
 xhtml1/word-spacing-applies-to-001.xht	?	
 html4/word-spacing-applies-to-002.htm	pass		2015-05-19 16:08:51
 xhtml1/word-spacing-applies-to-002.xht	?	
-html4/word-spacing-applies-to-003.htm	fail		2015-05-19 16:08:54
+html4/word-spacing-applies-to-003.htm	pass		2015-05-21 06:41:06
 xhtml1/word-spacing-applies-to-003.xht	?	
 html4/word-spacing-applies-to-005.htm	pass		2015-05-19 16:08:55
 xhtml1/word-spacing-applies-to-005.xht	?	
@@ -18647,13 +18647,13 @@ html4/word-spacing-applies-to-014.htm	pass		2015-05-19 16:09:01
 xhtml1/word-spacing-applies-to-014.xht	?	
 html4/word-spacing-applies-to-015.htm	pass		2015-05-19 16:09:02
 xhtml1/word-spacing-applies-to-015.xht	?	
-html4/word-spacing-characters-001.htm	na		2015-05-19 16:09:07
+html4/word-spacing-characters-001.htm	fail		2015-05-21 06:41:37
 xhtml1/word-spacing-characters-001.xht	?	
 html4/word-spacing-characters-002.htm	pass		2015-05-19 16:09:20
 xhtml1/word-spacing-characters-002.xht	?	
 html4/word-spacing-characters-003.htm	pass		2015-05-19 16:09:22
 xhtml1/word-spacing-characters-003.xht	?	
-html4/word-spacing-justify-001.htm	fail		2015-05-19 16:09:25
+html4/word-spacing-justify-001.htm	pass		2015-05-21 06:46:46
 xhtml1/word-spacing-justify-001.xht	?	
 html4/word-spacing-remove-space-001.htm	pass		2015-05-19 16:09:26
 xhtml1/word-spacing-remove-space-001.xht	?	
