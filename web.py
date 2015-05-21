@@ -41,9 +41,10 @@ if options.weasyprint_version:
     VERSION = options.weasyprint_version
 
 STYLESHEET = CSS(string='''
-    @page { margin: 0; size: 680px }
-    body { margin: 20px }
-    :root { image-rendering: optimizespeed }''')
+    @page { margin: 20px; size: 680px }
+    body { margin: 0 }
+    :root { image-rendering: optimizespeed }
+''')
 FOLDER = os.path.dirname(__file__)
 OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'png')
 BASE_PATH = os.path.join(FOLDER, 'suites')
