@@ -17,8 +17,8 @@
     ). See the <a href="{{ url_for('suite_results', suite=suite) }}">table of tests</a>.
   </p>
   {% for name, sections, test_number in chapters %}
-    <h2>{{ name }}</h2>
     {% set chapter_num = loop.index %}
+    <h2 id="chapter-{{ chapter_num }}">{{ name }}</h2>
     <ul>
       {% for title, url, tests in sections %}
         {% set section_num = loop.index %}

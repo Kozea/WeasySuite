@@ -4,7 +4,7 @@
   <ul>
     <li><a href='{{ url_for('toc') }}'>Test suites</a></li>
     <li><a href='{{ url_for('suite', suite=suite) }}'>{{ suite_name }}</a></li>
-    <li>{{ chapter }}</li>
+    <li><a href='{{ url_for('suite', suite=suite) }}#chapter-{{ chapter_num }}'>{{ chapter }}</a></li>
     <li>{{ title }}</li>
   </ul>
 {% endblock nav %}
@@ -15,7 +15,7 @@
   {% if url %}
     <p>Go to <a href="{{ url }}">the relevant page of the specification</a>.</p>
   {% endif %}
-  
+
   <dl>
     {% for test in tests %}
       <dt>
