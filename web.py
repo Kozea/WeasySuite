@@ -10,7 +10,7 @@ See http://test.csswg.org/suites/
     http://www.w3.org/Style/CSS/Test/
     http://test.csswg.org/
 
-:copyright: Copyright 2011-2012 Simon Sapin, 2013-2015 Kozea
+:copyright: Copyright 2011-2012 Simon Sapin, 2013-2016 Kozea
 :license: BSD, see LICENSE for details.
 
 """
