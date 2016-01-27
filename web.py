@@ -305,7 +305,7 @@ def download_suite(suite):
 def suite_results(suite):
     suite_name = SUITES[suite]['name']
     chapters = SUITES[suite]['chapters']
-    results = SUITES[suite]['results']
+    results = deepcopy(SUITES[suite]['results'])
     number = 0
     for version in results:
         results[version].update({'pass': 0, 'fail': 0, 'count': 0})
