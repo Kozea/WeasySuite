@@ -35,10 +35,9 @@ from flask import (
 
 
 parser = optparse.OptionParser(version=VERSION)
+parser.add_option('-r', '--read-only', action='store_true')
 parser.add_option('-V', '--weasyprint-version', default=VERSION)
 options = parser.parse_args()[0]
-if options.weasyprint_version:
-    VERSION = options.weasyprint_version
 
 STYLESHEET = CSS(string='''
     @page { margin: 20px; size: 680px }
@@ -48,6 +47,7 @@ STYLESHEET = CSS(string='''
 FOLDER = os.path.dirname(__file__)
 OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'png')
 BASE_PATH = os.path.join(FOLDER, 'suites')
+VERSION = options.weasyprint_version
 
 
 SUITES = {}
@@ -240,6 +240,8 @@ def save_test(suite, test):
 @app.route('/', methods=('GET', 'POST'))
 def toc():
     if request.method == 'POST':
+        if not app.config['DEBUG']:
+            return abort(403)
         data = urlopen('http://test.csswg.org/suites/')
         suites = [
             link.get('href')[:-5] for link in
@@ -361,6 +363,8 @@ def run_test(suite, chapter_num=None, section_num=None, test_index=None,
         test = dict(test_id=test_id)
 
     if request.method == 'POST':
+        if not app.config['DEBUG']:
+            return abort(403)
         test['date'] = datetime(*datetime.utcnow().timetuple()[:6])
         if request.form.get('next-result'):
             test['result'] = request.form['next-result']
@@ -431,4 +435,4 @@ if __name__ == '__main__':
     print('Tested version is %s' % VERSION)
     for suite in os.listdir(BASE_PATH):
         add_suite(suite)
-    app.run(debug=True)
+    app.run(debug=not options.read_only)
