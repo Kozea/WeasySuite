@@ -202,7 +202,7 @@ def read_chapter(filename, tests_by_link):
     if not os.path.isfile(index_filename):
         index_filename = index_filename[:-1]
     url_prefix = lxml.html.parse(index_filename).xpath(
-        '//a[starts-with(@href, "http://www.w3.org/TR/")]')[0].get('href')
+        '//a[contains(@href, "://www.w3.org/TR/")]')[0].get('href')
     for link in lxml.html.parse(filename).xpath(
             '//th/a[starts-with(@href, "%s")]' % url_prefix):
         url = link.get('href')[len(url_prefix):]
