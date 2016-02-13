@@ -269,6 +269,8 @@ def suite(suite):
 
 @app.route('/download-suite-<suite>/')
 def download_suite(suite):
+    if not app.config['DEBUG']:
+        return abort(403)
     data = urlopen('http://test.csswg.org/suites/%s_dev/' % suite)
     versions = [
         link.get('href')[:-1] for link in lxml.html.parse(data).xpath('//a')
