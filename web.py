@@ -435,4 +435,4 @@ if __name__ == '__main__':
     print('Tested version is %s' % VERSION)
     for suite in os.listdir(BASE_PATH):
         add_suite(suite)
-    app.run(debug=not options.read_only)
+    app.run(host='0.0.0.0', debug=not options.read_only)
