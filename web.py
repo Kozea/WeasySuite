@@ -35,7 +35,7 @@ from flask import (
 
 
 parser = optparse.OptionParser(version=VERSION)
-parser.add_option('-r', '--read-only', action='store_true')
+parser.add_option('-w', '--write', action='store_true')
 parser.add_option('-V', '--weasyprint-version', default=VERSION)
 options = parser.parse_args()[0]
 
@@ -433,11 +433,11 @@ def test_data(suite, filename):
     return send_from_directory(SUITES[suite]['path'], filename)
 
 
-if options.read_only or __name__ == '__main__':
+if not options.write or __name__ == '__main__':
     for suite in os.listdir(BASE_PATH):
         add_suite(suite)
 
 
 if __name__ == '__main__':
     print('Tested version is %s' % VERSION)
-    app.run(host='0.0.0.0', debug=not options.read_only)
+    app.run(host='0.0.0.0', debug=options.write)
