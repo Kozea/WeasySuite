@@ -433,8 +433,11 @@ def test_data(suite, filename):
     return send_from_directory(SUITES[suite]['path'], filename)
 
 
-if __name__ == '__main__':
-    print('Tested version is %s' % VERSION)
+if options.read_only or __name__ == '__main__':
     for suite in os.listdir(BASE_PATH):
         add_suite(suite)
+
+
+if __name__ == '__main__':
+    print('Tested version is %s' % VERSION)
     app.run(host='0.0.0.0', debug=not options.read_only)
