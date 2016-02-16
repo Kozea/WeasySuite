@@ -527,9 +527,9 @@ html4/border-radius-007.htm	pass		2016-02-15 18:18:50
 xhtml1/border-radius-007.xht	52603ca6aa3a828473572a1e7d979e3687f1877e	?
 html4/border-radius-008.htm	pass		2016-02-15 18:18:50
 xhtml1/border-radius-008.xht	86b9228a7c9b3ba3dca11c2156a1d05ed3896970	?
-html4/border-radius-009.htm	pass		2016-02-15 18:18:51
+html4/border-radius-009.htm	fail		2016-02-16 12:04:11
 xhtml1/border-radius-009.xht	bc6238d602e2b27c55e2490c832c0cc250976adc	?
-html4/border-radius-010.htm	pass		2016-02-15 18:18:52
+html4/border-radius-010.htm	fail		2016-02-16 12:04:12
 xhtml1/border-radius-010.xht	79f9633fad873c990ffb61fb1164620521700910	?
 html4/border-radius-011.htm	fail		2016-02-15 18:19:04
 xhtml1/border-radius-011.xht	dfff6e84db3ad2634d568f66f04f9b2ac07325e2	?
