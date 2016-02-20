@@ -87,13 +87,41 @@ html4/t424-hsl-h-rotating-b.htm	pass		2016-01-29 03:59:11
 xhtml1/t424-hsl-h-rotating-b.xht	?	
 html4/t424-hsl-parsing-f.htm	pass		2016-01-29 03:59:11
 xhtml1/t424-hsl-parsing-f.xht	?	
-html4/t424-hsl-values-b.htm	pass		2016-01-29 03:59:11
-xhtml1/t424-hsl-values-b.xht	?	
+html4/t424-hsl-values-b-1.htm	pass		2016-02-20 18:12:20
+xhtml1/t424-hsl-values-b-1.xht		?
+html4/t424-hsl-values-b-10.htm	pass		2016-02-20 18:12:20
+xhtml1/t424-hsl-values-b-10.xht		?
+html4/t424-hsl-values-b-11.htm	pass		2016-02-20 18:12:21
+xhtml1/t424-hsl-values-b-11.xht		?
+html4/t424-hsl-values-b-12.htm	pass		2016-02-20 18:12:21
+xhtml1/t424-hsl-values-b-12.xht		?
+html4/t424-hsl-values-b-13.htm	pass		2016-02-20 18:12:22
+xhtml1/t424-hsl-values-b-13.xht		?
+html4/t424-hsl-values-b-14.htm	pass		2016-02-20 18:12:22
+xhtml1/t424-hsl-values-b-14.xht		?
+html4/t424-hsl-values-b-15.htm	pass		2016-02-20 18:12:23
+xhtml1/t424-hsl-values-b-15.xht		?
+html4/t424-hsl-values-b-2.htm	pass		2016-02-20 18:12:23
+xhtml1/t424-hsl-values-b-2.xht		?
+html4/t424-hsl-values-b-3.htm	pass		2016-02-20 18:12:24
+xhtml1/t424-hsl-values-b-3.xht		?
+html4/t424-hsl-values-b-4.htm	pass		2016-02-20 18:12:25
+xhtml1/t424-hsl-values-b-4.xht		?
+html4/t424-hsl-values-b-5.htm	pass		2016-02-20 18:12:25
+xhtml1/t424-hsl-values-b-5.xht		?
+html4/t424-hsl-values-b-6.htm	pass		2016-02-20 18:12:26
+xhtml1/t424-hsl-values-b-6.xht		?
+html4/t424-hsl-values-b-7.htm	pass		2016-02-20 18:12:26
+xhtml1/t424-hsl-values-b-7.xht		?
+html4/t424-hsl-values-b-8.htm	pass		2016-02-20 18:12:27
+xhtml1/t424-hsl-values-b-8.xht		?
+html4/t424-hsl-values-b-9.htm	pass		2016-02-20 18:12:27
+xhtml1/t424-hsl-values-b-9.xht		?
 html4/t425-hsla-basic-a.htm	pass		2016-01-29 03:59:11
 xhtml1/t425-hsla-basic-a.xht	?	
 html4/t425-hsla-clip-outside-device-gamut-b.htm	pass		2016-01-29 03:59:11
 xhtml1/t425-hsla-clip-outside-device-gamut-b.xht	?	
-html4/t425-hsla-h-rotating-b.htm	pass		2016-01-29 03:59:11
+html4/t425-hsla-h-rotating-b.htm	pass		2016-02-20 18:12:28
 xhtml1/t425-hsla-h-rotating-b.xht	?	
 html4/t425-hsla-onscreen-b.htm	pass		2016-01-29 03:59:11
 xhtml1/t425-hsla-onscreen-b.xht	?	
@@ -113,3 +141,5 @@ html4/t44-currentcolor-inherited-c.htm	pass		2016-01-29 03:59:11
 xhtml1/t44-currentcolor-inherited-c.xht	?	
 html4/t451-system-colors-a.htm	fail		2016-01-29 03:59:11
 xhtml1/t451-system-colors-a.xht	?	
+html4/will-change-stacking-context-opacity-1.htm	fail		2016-02-20 18:09:07
+xhtml1/will-change-stacking-context-opacity-1.xht	?	?
