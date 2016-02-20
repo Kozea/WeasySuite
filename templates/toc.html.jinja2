@@ -10,16 +10,16 @@
     {% endfor %}
   </ul>
 
-  <h2>Downloadable Suites</h2>
-  <ul>
-    {% for suite in missing_suites | sort %}
-      <li>
-        {% if config.DEBUG %}<a href="{{ url_for('download_suite', suite=suite ) }}">{{ suite }}</a>
-        {% else %}{{ suite }}{% endif %}
-    {% endfor %}
-  </ul>
-
   {% if config.DEBUG %}
+    <h2>Downloadable Suites</h2>
+    <ul>
+      {% for suite in missing_suites | sort %}
+        <li>
+          {% if config.DEBUG %}<a href="{{ url_for('download_suite', suite=suite ) }}">{{ suite }}</a>
+          {% else %}{{ suite }}{% endif %}
+        {% endfor %}
+    </ul>
+
     <form method="post">
       <input type="submit" value="Update" />
     </form>
