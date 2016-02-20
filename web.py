@@ -171,6 +171,8 @@ def add_suite(suite):
                         test_id = '.'.join(test_id_parts[:-i])
                         if test_id in tests:
                             break
+                    if test_id not in tests:
+                        continue
                     tests[test_id]['result'] = result
                     tests[test_id]['comment'] = comment
                     tests[test_id]['date'] = date
