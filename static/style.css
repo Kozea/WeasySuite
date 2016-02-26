@@ -34,6 +34,7 @@ h1 {
 nav {
   background: orange;
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
+  overflow: auto;
   padding: 0.5em 1.2em;
 }
 
