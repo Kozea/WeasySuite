@@ -73,4 +73,6 @@ for suite_name, suite in SUITES.items():
                     sys.stdout.flush()
             print()
 
-print('\n\n\nCrashes: ', CRASHES)
+print('\n\n\nCrashes:')
+for crash in CRASHES:
+    print(crash)
