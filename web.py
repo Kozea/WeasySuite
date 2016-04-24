@@ -28,6 +28,9 @@ from urllib.request import urlopen
 from zipfile import ZipFile
 
 import lxml.html
+from pygments import highlight
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import HtmlLexer
 from weasyprint import HTML, CSS, VERSION
 from flask import (
     Flask, render_template, abort, send_from_directory, safe_join,
@@ -381,10 +384,6 @@ def run_test(suite, chapter_num=None, section_num=None, test_index=None,
             test['comment'] = request.form['comment'].strip()
             save_test(suite, test)
             return redirect(request.path)
-
-    from pygments import highlight
-    from pygments.lexers import HtmlLexer
-    from pygments.formatters import HtmlFormatter
 
     filenames = [
         filename for filename in os.listdir(SUITES[suite]['path'])
