@@ -65,7 +65,8 @@ for suite_name, suite in SUITES.items():
                     except:
                         print('C', end='')
                         crash_filename = '{}.txt'.format(image_filename)
-                        CRASHES.append(crash_filename)
+                        CRASHES.append('%s - %s - %s - %s' % (
+                            suite_name, chapter_name, section_name, test_id))
                         with open(crash_filename, 'w') as fd:
                             fd.write(traceback.format_exc())
                     else:
