@@ -155,13 +155,29 @@ def add_suite(suite):
         filename = os.path.join(FOLDER, 'results', version, suite)
         if os.path.isfile(filename):
             results = iter(open(filename).readlines())
+            default_result = 'unavailable'
         else:
             results = []
+            default_result = '?'
+
+        for result_line in results:
+            if result_line.startswith('testname'):
+                included_revision = 'revision' in result_line
+                break
 
         for result_line in results:
             result_line = result_line[:-1]
             if result_line.startswith(SUITES[suite]['format']):
-                name, result, comment = result_line.split('\t', 2)
+                if included_revision:
+                    if result_line.count('\t') < 3:
+                        name, revision, result = (
+                            result_line.split('\t', 2))
+                        comment = ''
+                    else:
+                        name, revision, result, comment = (
+                            result_line.split('\t', 3))
+                else:
+                    name, result, comment = result_line.split('\t', 2)
                 if '\t' in comment:
                     comment, date = comment.split('\t')
                     date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
@@ -179,10 +195,12 @@ def add_suite(suite):
                     tests[test_id]['result'] = result
                     tests[test_id]['comment'] = comment
                     tests[test_id]['date'] = date
+                    if included_revision:
+                        tests[test_id]['revision'] = revision
 
         for test in tests:
             if 'result' not in tests[test]:
-                tests[test]['result'] = 'unavailable'
+                tests[test]['result'] = default_result
                 tests[test]['comment'] = None
                 tests[test]['date'] = None
 
@@ -236,9 +254,12 @@ def save_test(suite, test):
         open(filename, 'w').write(''.join(lines))
     for line in fileinput.input(filename, inplace=1):
         if line.startswith('/'.join((format, test['test_id'] + '.'))):
-            line = '\t'.join((
+            line = [
                 line.split('\t')[0], test['result'] or '?',
-                test['comment'] or '', str(test['date']))) + '\n'
+                test['comment'] or '', str(test['date'])]
+            if 'revision' in test:
+                line.insert(1, test['revision'])
+            line = '\t'.join(line) + '\n'
         sys.stdout.write(line)
 
 
