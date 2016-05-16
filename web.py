@@ -48,9 +48,9 @@ STYLESHEET = CSS(string='''
     :root { image-rendering: optimizespeed }
 ''')
 FOLDER = os.path.dirname(__file__)
+VERSION = options.weasyprint_version
 OUTPUT_FOLDER = os.path.join(FOLDER, 'results', VERSION, 'png')
 BASE_PATH = os.path.join(FOLDER, 'suites')
-VERSION = options.weasyprint_version
 
 
 SUITES = {}
