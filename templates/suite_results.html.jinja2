@@ -40,7 +40,7 @@
               </td>
               {% for version in results | sort %}
                 {% set version_test = results[version][test.test_id] %}
-                <td class='{{ version_test.result }}'>{{ version_test.result }} {{ version_test.comment or '' }}</td>
+                <td title="{{ version_test.comment or '' }}" class='{{ version_test.result }}'>{{ version_test.result }}</td>
               {% endfor %}
             </tr>
           {% endfor %}
