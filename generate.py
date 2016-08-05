@@ -74,6 +74,7 @@ for suite_name, suite in SUITES.items():
                     sys.stdout.flush()
             print()
 
-print('\n\n\nCrashes:')
-for crash in CRASHES:
-    print(crash)
+if CRASHES:
+    print('\n\n\nCrashes:')
+    for crash in CRASHES:
+        print(crash)
