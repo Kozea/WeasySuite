@@ -226,13 +226,20 @@ def read_chapter(filename, tests_by_link):
         index_filename = index_filename[:-1]
     url_prefix = lxml.html.parse(index_filename).xpath(
         '//a[contains(@href, "://www.w3.org/TR/")]')[0].get('href')
-    for link in lxml.html.parse(filename).xpath(
+    chapter = lxml.html.parse(filename)
+    for link in chapter.xpath(
             '//th/a[starts-with(@href, "%s")]' % url_prefix):
-        url = link.get('href')[len(url_prefix):]
-        if url in tests_by_link:
-            yield (
-                link.text_content().strip(), link.get('href'),
-                tests_by_link[url])
+        urls = [link.get('href')[len(url_prefix):]]
+        section_id = chapter.xpath(
+            '//a[@href = "%s"]/../../..' % link.get('href'))[0].get('id')
+        for url in chapter.xpath(
+                '//tbody[starts-with(@id, "%s.#")]' % section_id):
+            urls.append(url.get('id')[len(section_id) + 1:])
+        tests = [
+            test for url in urls if url in tests_by_link
+            for test in tests_by_link[url]]
+        if tests:
+            yield link.text_content().strip(), link.get('href'), tests
 
 
 def save_test(suite, test):
