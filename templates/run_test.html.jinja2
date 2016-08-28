@@ -29,26 +29,9 @@
   <h2>{{ test.title }}</h2>
 
   <form class="{{ test.result }}" method="POST">
-    <fieldset>
-      <input type="submit" name="next-result" value="pass" accesskey="p" {% if not config.DEBUG %}disabled{% endif %} />
-      <input type="submit" name="next-result" value="fail" accesskey="f" {% if not config.DEBUG %}disabled{% endif %} />
-      <input type="submit" name="next-result" value="na" accesskey="n" {% if not config.DEBUG %}disabled{% endif %} />
-    </fieldset>
-
-    <fieldset>
-      {% if config.DEBUG %}
-        <label>Result {% if test.date %}({{ test.date }}){% endif %}</label>
-        {% for result, label in (('?', 'Unknown'), ('pass', 'Pass'), ('fail', 'Fail'), ('na', 'Not Applicable')) %}
-          <label for="result-{{ result }}">
-            <input type="radio" name="result" id="result-{{ result }}" value="{{ result }}" {{ 'checked' if result == test.result }} />
-            {{ label }}
-          </label>
-        {% endfor %}
-      {% endif %}
-      <label for="comment">Comment</label>
-      <textarea name="comment" id="comment" {% if not config.DEBUG %}disabled{% endif %}>{{ test.comment or '' }}</textarea>
-      <input type="submit" value="Submit" {% if not config.DEBUG %}disabled{% endif %} />
-    </fieldset>
+    <input type="submit" name="next-result" value="pass" accesskey="p" {% if not config.DEBUG %}disabled{% endif %} />
+    <input type="submit" name="next-result" value="fail" accesskey="f" {% if not config.DEBUG %}disabled{% endif %} />
+    <input type="submit" name="next-result" value="na" accesskey="n" {% if not config.DEBUG %}disabled{% endif %} />
   </form>
 
   {% if source %}

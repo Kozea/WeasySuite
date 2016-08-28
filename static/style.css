@@ -2,6 +2,8 @@
 
 body {
   color: rgba(20, 30, 20, 0.9);
+  display: flex;
+  flex-direction: column;
   font-family: 'Source Sans Pro';
   margin: 0;
 }
@@ -14,13 +16,15 @@ header {
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
   color: white;
   font-weight: 300;
-  padding: 1em;
-  position: relative;
-  z-index: 2;
+  padding: 0.5em;
 }
 
 header:before {
+  bottom: 1em;
+  color: black;
   content: 'WeasySuite';
+  position: fixed;
+  right: 1em;
 }
 
 h1 {
@@ -35,7 +39,7 @@ nav {
   background: orange;
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.3);
   overflow: auto;
-  padding: 0.5em 1.2em;
+  padding: 0.5em 0.75em;
 }
 
 nav:empty {
@@ -74,13 +78,15 @@ nav a:not([href]) {
 /* Main */
 
 main {
+  display: flex;
+  flex-wrap: wrap;
   padding: 1em;
-  position: relative;
 }
 
 h2, h3 {
   font-weight: normal;
   margin: 0.5em 0 0;
+  width: 100%
 }
 
 main a {
@@ -103,97 +109,75 @@ label {
 }
 
 form {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  display: block;
-  position: absolute;
-  top: 1em;
-  right: 1em;
-}
-
-fieldset {
-  border: none;
-  clear: right;
-  float: right;
-  margin: 0;
   padding: 0.5em;
+  position: absolute;
+  right: 1px;
+  top: 1px;
 }
 
-fieldset + fieldset {
-  display: none;
-}
-
-fieldset:hover, fieldset:hover + fieldset {
-  display: block;
-}
-
-input, textarea {
-  color: black;
+input {
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  color: black;
 }
 
-input:not([disabled]):hover, input:not([disabled]):focus,
-textarea:not([disabled]):hover, textarea:not([disabled]):focus {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-input[value=Submit][disabled] {
-  display: none;
-}
-
-textarea[disabled] {
-  background: rgba(255, 255, 255, 0.5);
-  border-color: rgba(0, 0, 0, 0.2);
-}
-
-textarea {
-  display: block;
+input:not([disabled]):hover,
+input:not([disabled]):focus {
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .pass input[value="pass"], td.pass {
-  background: rgba(0, 255, 0, 0.2);
+  background: green;
 }
 
 .fail input[value="fail"], td.fail {
-  background: rgba(255, 0, 0, 0.2);
+  background: red;
 }
 
 .na input[value="na"], td.na {
-  background: rgba(0, 0, 255, 0.2);
+  background: blue;
 }
 
-pre {
+.highlight {
+  display: block;
   overflow-x: auto;
+  width: 100%;
 }
 
 section {
-  display: table-cell;
   padding-right: 1em;
 }
 
+mail dl {
+  width: 100%;
+}
+
 .weasy iframe {
-  width: 720px;
+  border: 0;
   height: 720px;
   margin-left: -10px;
-  border: 0;
+  width: 720px;
+}
+
+.browser {
+  margin: 0 30px 30px 0;
 }
 
 .browser iframe {
-  box-shadow: 0 0 10px 2px #aaa;
-  margin-top: 10px;
   border: none;
-  width: 680px;
-  height: 680px;
+  box-shadow: 0 0 10px 2px #aaa;
   box-sizing: content-box;
+  height: 680px;
+  margin-top: 10px;
+  width: 680px;
 }
 
 
 /* Table of tests */
 
 table {
-  border-collapse: collapse;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  border-collapse: collapse;
   text-align: left;
 }
 
