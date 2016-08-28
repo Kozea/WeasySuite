@@ -1,0 +1,161 @@
+# WeasyPrint 0.31
+#
+# http://test.csswg.org/suites/css-page-3_dev/nightly-unstable/
+# See http://wiki.csswg.org/test/implementation-report for instructions
+testname    result  comment
+html/allowed-page-breaks-001a.htm	pass		2016-08-27 13:23:49
+xhtml1/allowed-page-breaks-001a.xht	?	
+html/allowed-page-breaks-001b.htm	fail		2016-08-27 13:23:49
+xhtml1/allowed-page-breaks-001b.xht	?	
+html/allowed-page-breaks-001c.htm	fail		2016-08-27 13:23:49
+xhtml1/allowed-page-breaks-001c.xht	?	
+html/at-page-rule-002-a.htm	pass		2016-08-27 13:23:48
+xhtml1/at-page-rule-002-a.xht	?	
+html/at-page-rule-002-b.htm	pass		2016-08-27 13:23:48
+xhtml1/at-page-rule-002-b.xht	?	
+html/at-page-rule-002-c.htm	pass		2016-08-27 13:23:47
+xhtml1/at-page-rule-002-c.xht	?	
+html/orphans-001.htm	pass		2016-08-27 13:23:49
+xhtml1/orphans-001.xht	?	
+html/orphans-004a.htm	pass		2016-08-27 13:38:18
+xhtml1/orphans-004a.xht	?	
+html/orphans-004b.htm	pass		2016-08-27 13:23:47
+xhtml1/orphans-004b.xht	?	
+html/page-background-000.htm	pass		2016-08-27 13:23:48
+xhtml1/page-background-000.xht	?	
+html/page-borders-000.htm	pass		2016-08-27 13:23:48
+xhtml1/page-borders-000.xht	?	
+html/page-box-000.htm	pass		2016-08-27 13:23:48
+xhtml1/page-box-000.xht	?	
+html/page-break-after-002.htm	pass		2016-08-27 13:23:48
+xhtml1/page-break-after-002.xht	?	
+html/page-break-after-005.htm	pass		2016-08-27 13:23:48
+xhtml1/page-break-after-005.xht	?	
+html/page-break-after-006.htm	pass		2016-08-27 13:23:47
+xhtml1/page-break-after-006.xht	?	
+html/page-break-after-007.htm	pass		2016-08-27 13:23:47
+xhtml1/page-break-after-007.xht	?	
+html/page-break-after-008.htm	pass		2016-08-27 13:23:47
+xhtml1/page-break-after-008.xht	?	
+html/page-break-after-009.htm	pass		2016-08-27 13:23:48
+xhtml1/page-break-after-009.xht	?	
+html/page-break-after-010.htm	pass		2016-08-27 13:23:48
+xhtml1/page-break-after-010.xht	?	
+html/page-break-before-000.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-000.xht	?	
+html/page-break-before-003.htm	pass		2016-08-27 13:23:48
+xhtml1/page-break-before-003.xht	?	
+html/page-break-before-004.htm	pass		2016-08-27 13:23:48
+xhtml1/page-break-before-004.xht	?	
+html/page-break-before-005.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-005.xht	?	
+html/page-break-before-006.htm	pass		2016-08-27 13:23:48
+xhtml1/page-break-before-006.xht	?	
+html/page-break-before-007-b.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-007-b.xht	?	
+html/page-break-before-007.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-007.xht	?	
+html/page-break-before-008.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-008.xht	?	
+html/page-break-before-009.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-009.xht	?	
+html/page-break-before-010.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-010.xht	?	
+html/page-break-before-011.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-before-011.xht	?	
+html/page-break-before-020.htm	fail		2016-08-27 13:23:48
+xhtml1/page-break-before-020.xht	?	
+html/page-break-inside-001.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-inside-001.xht	?	
+html/page-break-inside-004.htm	pass		2016-08-27 13:23:49
+xhtml1/page-break-inside-004.xht	?	
+html/page-break-margins-003.htm	fail		2016-08-27 13:23:49
+xhtml1/page-break-margins-003.xht	?	
+html/page-break-margins-004.htm	fail		2016-08-27 13:23:48
+xhtml1/page-break-margins-004.xht	?	
+html/page-breaks-100.htm	pass		2016-08-27 13:23:49
+xhtml1/page-breaks-100.xht	?	
+html/page-breaks-101.htm	fail		2016-08-27 13:23:49
+xhtml1/page-breaks-101.xht	?	
+html/page-container-000.htm	pass		2016-08-27 13:23:47
+xhtml1/page-container-000.xht	?	
+html/page-container-001.htm	pass		2016-08-27 13:23:48
+xhtml1/page-container-001.xht	?	
+html/page-container-002.htm	pass		2016-08-27 13:23:47
+xhtml1/page-container-002.xht	?	
+html/page-container-003.htm	pass		2016-08-27 13:23:49
+xhtml1/page-container-003.xht	?	
+html/page-container-004.htm	fail		2016-08-27 13:23:47
+xhtml1/page-container-004.xht	?	
+html/page-container-005.htm	fail		2016-08-27 13:38:11
+xhtml1/page-container-005.xht	?	
+html/page-container-006.htm	pass		2016-08-27 13:23:49
+xhtml1/page-container-006.xht	?	
+html/page-container-008.htm	pass		2016-08-27 13:23:49
+xhtml1/page-container-008.xht	?	
+html/page-container-009.htm	pass		2016-08-27 13:23:48
+xhtml1/page-container-009.xht	?	
+html/page-container-010.htm	pass		2016-08-27 13:23:49
+xhtml1/page-container-010.xht	?	
+html/page-counters-000.htm	fail		2016-08-27 13:23:49
+xhtml1/page-counters-000.xht	?	
+html/page-grammar-001.htm	pass		2016-08-27 13:23:48
+xhtml1/page-grammar-001.xht	?	
+html/page-grammar-002.htm	pass		2016-08-27 13:23:48
+xhtml1/page-grammar-002.xht	?	
+html/page-margin-000.htm	pass		2016-08-27 13:23:49
+xhtml1/page-margin-000.xht	?	
+html/page-margin-001.htm	pass		2016-08-27 13:23:49
+xhtml1/page-margin-001.xht	?	
+html/page-margin-002.htm	pass		2016-08-27 13:23:49
+xhtml1/page-margin-002.xht	?	
+html/page-margin-003.htm	pass		2016-08-27 13:23:49
+xhtml1/page-margin-003.xht	?	
+html/page-name-000.htm	pass		2016-08-27 13:23:48
+xhtml1/page-name-000.xht	?	
+html/page-properties-000.htm	fail		2016-08-27 13:23:48
+xhtml1/page-properties-000.xht	?	
+html/page-props-100-a.htm	pass		2016-08-27 13:23:49
+xhtml1/page-props-100-a.xht	?	
+html/page-props-100-b.htm	pass		2016-08-27 13:23:49
+xhtml1/page-props-100-b.xht	?	
+html/page-props-101.htm	pass		2016-08-27 13:23:48
+xhtml1/page-props-101.xht	?	
+html/page-props-103.htm	pass		2016-08-27 13:23:49
+xhtml1/page-props-103.xht	?	
+html/page-selectors-001.htm	pass		2016-08-27 13:23:47
+xhtml1/page-selectors-001.xht	?	
+html/page-selectors-002.htm	pass		2016-08-27 13:23:49
+xhtml1/page-selectors-002.xht	?	
+html/page-selectors-003.htm	pass		2016-08-27 13:23:49
+xhtml1/page-selectors-003.xht	?	
+html/page-selectors-004.htm	pass		2016-08-27 13:23:49
+xhtml1/page-selectors-004.xht	?	
+html/page-selectors-006.htm	pass		2016-08-27 13:23:47
+xhtml1/page-selectors-006.xht	?	
+html/page-size-000.htm	pass		2016-08-27 13:23:48
+xhtml1/page-size-000.xht	?	
+html/page-size-001.htm	fail		2016-08-27 13:23:49
+xhtml1/page-size-001.xht	?	
+html/page-size-002.htm	pass		2016-08-27 13:23:48
+xhtml1/page-size-002.xht	?	
+html/page-size-003.htm	pass		2016-08-27 13:23:49
+xhtml1/page-size-003.xht	?	
+html/page-size-004.htm	pass		2016-08-27 13:23:47
+xhtml1/page-size-004.xht	?	
+html/page-size-005.htm	pass		2016-08-27 13:23:48
+xhtml1/page-size-005.xht	?	
+html/page-size-006.htm	pass		2016-08-27 13:23:48
+xhtml1/page-size-006.xht	?	
+html/page-size-007.htm	pass		2016-08-27 13:23:49
+xhtml1/page-size-007.xht	?	
+html/page-size-008.htm	pass		2016-08-27 13:23:48
+xhtml1/page-size-008.xht	?	
+html/page-size-009.htm	pass		2016-08-27 13:23:48
+xhtml1/page-size-009.xht	?	
+html/page-size-010.htm	pass		2016-08-27 13:23:49
+xhtml1/page-size-010.xht	?	
+html/widows-004a.htm	fail		2016-08-27 13:38:24
+xhtml1/widows-004a.xht	?	
+html/widows-004b.htm	pass		2016-08-27 13:23:49
+xhtml1/widows-004b.xht	?	
