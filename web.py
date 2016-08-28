@@ -45,7 +45,7 @@ options = parser.parse_args()[0]
 STYLESHEET = CSS(string='''
     @page { margin: 20px; size: 680px }
     body { margin: 0 }
-    :root { image-rendering: optimizespeed }
+    :root { image-rendering: pixelated }
 ''')
 FOLDER = os.path.dirname(__file__)
 VERSION = options.weasyprint_version
