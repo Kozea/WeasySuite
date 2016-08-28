@@ -60,8 +60,12 @@
     {% for equal, references in test.references.items() %}
       {% for reference in references %}
         <section class="weasy">
-          <h3>Reference ({{ 'good' if equal else 'bad' }})</h3>
+          <h3>Reference ({{ 'good' if equal else 'bad' }}) by WeasyPrint</h3>
           <iframe src="{{ url_for('render', suite=suite, test_id=reference) }}"></iframe>
+        </section>
+        <section class="browser">
+          <h3>Reference ({{ 'good' if equal else 'bad' }}) by this browser</h3>
+          <iframe src="{{ url_for('test_data', suite=suite, filename=reference + '.htm') }}"></iframe>
         </section>
       {% endfor %}
     {% endfor %}
