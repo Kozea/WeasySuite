@@ -10,29 +10,54 @@
 {% endblock nav %}
 
 {% block main %}
-  <p>Total: {{ total }} tests (
-    {%- for label, grouped_tests in tests | groupby('result') | sort(0) %}
+  <h2>Total</h2>
+  {% set sorted_tests = tests | groupby('result') | sort(0) %}
+  {% set fail = dict(sorted_tests).fail | length %}
+  {% set pass = dict(sorted_tests).pass | length %}
+  <meter title="{{ pass }}/{{ pass + fail }}" value="{{ pass }}" max="{{ pass + fail }}" min="0" high="{{ pass + fail }}" low="{{ (pass + fail) * 0.5 }}">
+    {{ pass }}/{{ pass + fail }}
+  </meter>
+  <p>{{ total }} tests (
+    {%- for label, grouped_tests in sorted_tests -%}
       {%- if grouped_tests %}{{ grouped_tests | length }} {{ label }}{% if not loop.last %}, {% endif %}{% endif -%}
     {% endfor -%}
-    ). See the <a href="{{ url_for('suite_results', suite=suite) }}">table of tests</a>.
+    ).
   </p>
+  <p>
+    See the <a href="{{ url_for('suite_results', suite=suite) }}">table of tests</a>.
+  </p>
+  <h2>Chapters</h2>
   {% for name, sections, test_number in chapters %}
-    {% set chapter_num = loop.index %}
-    <h2 id="chapter-{{ chapter_num }}">{{ name }}</h2>
-    <ul>
-      {% for title, url, tests in sections %}
-        {% set section_num = loop.index %}
-        <li>
-          <a href="{{ url_for('section', suite=suite, chapter_num=chapter_num, section_num=section_num) }}">
-            {{ title }}
-          </a>,
-          {{ tests | length }} tests (
-          {%- for label, grouped_tests in tests | groupby('result') | sort(0) %}
-            {%- if grouped_tests | length %}{{ grouped_tests | length }} {{ label }}{% if not loop.last %}, {% endif %}{% endif -%}
-          {% endfor -%}
-          )
-        </li>
-      {% endfor %}
-    </ul>
+    <chapter>
+      {% set chapter_num = loop.index %}
+      <h3 id="chapter-{{ chapter_num }}">{{ name }}</h3>
+      {% set pass = [] %}
+      {% set fail = [] %}
+      <ul>
+        {% for title, url, tests in sections %}
+          {% set section_num = loop.index %}
+          <li>
+            <a href="{{ url_for('section', suite=suite, chapter_num=chapter_num, section_num=section_num) }}">
+              {{ title }}
+            </a>,
+            {{ tests | length }} tests (
+            {%- for label, grouped_tests in tests | groupby('result') | sort(0) %}
+              {%- if grouped_tests | length %}{{ grouped_tests | length }} {{ label }}{% if not loop.last %}, {% endif %}{% endif -%}
+              {%- if label == 'pass' -%}
+                {{ pass.extend(grouped_tests) or '' }}
+              {%- elif label == 'fail' -%}
+                {{ fail.extend(grouped_tests) or '' }}
+              {%- endif -%}
+            {% endfor -%}
+            )
+          </li>
+        {% endfor %}
+      </ul>
+      {% set pass = pass | length %}
+      {% set fail = fail | length %}
+      <meter title="{{ pass }}/{{ pass + fail }}" value="{{ pass }}" max="{{ pass + fail }}" min="0" high="{{ pass + fail }}" low="{{ (pass + fail) * 0.5 }}">
+        {{ pass }}/{{ pass + fail }}
+      </meter>
+    </chapter>
   {% endfor %}
 {% endblock main %}

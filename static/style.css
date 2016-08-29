@@ -23,6 +23,7 @@ header:before {
   bottom: 1em;
   color: black;
   content: 'WeasySuite';
+  opacity: 0.3;
   position: fixed;
   right: 1em;
 }
@@ -126,16 +127,28 @@ input:not([disabled]):focus {
   background: rgba(255, 255, 255, 0.8);
 }
 
-.pass input[value="pass"], td.pass {
-  background: green;
+.pass input[value="pass"] {
+  background: rgba(0, 255, 0, 0.9);
 }
 
-.fail input[value="fail"], td.fail {
-  background: red;
+.fail input[value="fail"] {
+  background: rgba(255, 0, 0, 0.9);
 }
 
-.na input[value="na"], td.na {
-  background: blue;
+.na input[value="na"] {
+  background: rgba(0, 0, 255, 0.9);
+}
+
+td.pass {
+  background: rgba(0, 255, 0, 0.2);
+}
+
+td.fail {
+  background: rgba(255, 0, 0, 0.2);
+}
+
+td.na {
+  background: rgba(0, 0, 255, 0.2);
 }
 
 .highlight {
@@ -148,7 +161,10 @@ section {
   padding-right: 1em;
 }
 
-mail dl {
+main dl,
+main ul,
+main p {
+  margin: 0.5em 0;
   width: 100%;
 }
 
@@ -172,11 +188,35 @@ mail dl {
   width: 680px;
 }
 
+meter {
+  height: 0.6em;
+  margin: 0.3em 0;
+  width: 50%;
+}
+
+meter[max="0"] {
+  opacity: 0.2;
+}
+
+chapter {
+  display: flex;
+  flex-direction: column;
+  margin: 1em 0;
+  position: relative;
+  width: 100%;
+}
+
+chapter meter {
+  height: 0.2em;
+  margin: 0;
+  opacity: 0.8;
+  order: -1;
+}
+
 
 /* Table of tests */
 
 table {
-  border: 1px solid rgba(0, 0, 0, 0.1);
   border-collapse: collapse;
   text-align: left;
 }
