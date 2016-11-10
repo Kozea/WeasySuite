@@ -44,7 +44,7 @@ options = parser.parse_args()[0]
 
 STYLESHEET = CSS(string='''
     @page { margin: 20px; size: 680px }
-    body { margin: 0 }
+    body { margin: 0; overflow: hidden }
     :root { image-rendering: pixelated }
 ''')
 FOLDER = os.path.dirname(__file__)
@@ -449,7 +449,8 @@ def render(suite, test_id, media_type='print', stylesheet=None):
     filename = safe_join(folder, filename)
     document = (
         HTML(filename, encoding='utf8', media_type=media_type)
-        .render(stylesheets=stylesheets, enable_hinting=True))
+        .render(stylesheets=stylesheets, enable_hinting=True,
+                presentational_hints=True))
     pages = [
         'data:image/png;base64,' +
         b64encode(document.copy([page]).write_png()[0]).decode()

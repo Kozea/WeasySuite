@@ -20,7 +20,8 @@ import traceback
 
 from weasyprint import HTML
 
-from web import add_suite, BASE_PATH, SUITES, STYLESHEET, OUTPUT_FOLDER, VERSION
+from web import (
+    add_suite, BASE_PATH, SUITES, STYLESHEET, OUTPUT_FOLDER, VERSION)
 
 
 logging.getLogger('weasyprint').setLevel(100)
@@ -59,7 +60,8 @@ for suite_name, suite in SUITES.items():
                     filename = os.path.join(suite['path'], filenames[0])
                     try:
                         document = HTML(filename, encoding='utf8').write_png(
-                            image_filename, stylesheets=[STYLESHEET])
+                            image_filename, stylesheets=[STYLESHEET],
+                            presentational_hints=True)
                     except KeyboardInterrupt as error:
                         raise error
                     except:
