@@ -44,7 +44,7 @@ options = parser.parse_args()[0]
 
 STYLESHEET = CSS(string='''
     @page { margin: 20px; size: 680px }
-    body { margin: 0; overflow: hidden }
+    body { margin: 0 }
     :root { image-rendering: pixelated }
 ''')
 FOLDER = os.path.dirname(__file__)
