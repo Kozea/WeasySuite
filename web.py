@@ -15,12 +15,12 @@ See http://test.csswg.org/suites/
 
 """
 
-import os
-import sys
 import fileinput
 import io
 import json
 import optparse
+import os
+import sys
 from base64 import b64encode
 from copy import deepcopy
 from datetime import datetime
@@ -28,14 +28,13 @@ from urllib.request import urlopen
 from zipfile import ZipFile
 
 import lxml.html
+from flask import (
+    Flask, abort, redirect, render_template, request, safe_join,
+    send_from_directory, url_for)
 from pygments import highlight
 from pygments.formatters import HtmlFormatter
 from pygments.lexers import HtmlLexer
-from weasyprint import HTML, CSS, VERSION
-from flask import (
-    Flask, render_template, abort, send_from_directory, safe_join,
-    redirect, request, url_for)
-
+from weasyprint import CSS, HTML, VERSION
 
 parser = optparse.OptionParser(version=VERSION)
 parser.add_option('-w', '--write', action='store_true')
@@ -464,8 +463,8 @@ def test_data(suite, filename):
 
 
 if not options.write or __name__ == '__main__':
-    for suite in os.listdir(BASE_PATH):
-        add_suite(suite)
+    for suite_name in os.listdir(BASE_PATH):
+        add_suite(suite_name)
 
 
 if __name__ == '__main__':

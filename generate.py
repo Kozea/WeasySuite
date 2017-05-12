@@ -13,15 +13,15 @@ A script generating PNG images for all tests.
 import logging
 import os
 import re
+import shutil
 import sys
 import time
-import shutil
 import traceback
 
 from weasyprint import HTML
 
 from web import (
-    add_suite, BASE_PATH, SUITES, STYLESHEET, OUTPUT_FOLDER, VERSION)
+    BASE_PATH, OUTPUT_FOLDER, STYLESHEET, SUITES, VERSION, add_suite)
 
 
 logging.getLogger('weasyprint').setLevel(100)

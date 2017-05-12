@@ -1,3 +1,6 @@
 results/*/png
 suites
 __pycache__
+.cache
+.env
+*.egg-info

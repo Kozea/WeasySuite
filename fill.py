@@ -17,7 +17,7 @@ import time
 from datetime import datetime
 
 from web import (
-    add_suite, save_test, BASE_PATH, FOLDER, OUTPUT_FOLDER, SUITES, VERSION)
+    BASE_PATH, FOLDER, OUTPUT_FOLDER, SUITES, VERSION, add_suite, save_test)
 
 
 versions = sorted(os.listdir(os.path.join(FOLDER, 'results')))
