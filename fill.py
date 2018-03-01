@@ -40,14 +40,21 @@ for suite_name, suite in SUITES.items():
         image_filename = os.path.join(OUTPUT_FOLDER, name + '.png')
         old_image_filename = image_filename.replace(
             '/%s/' % VERSION, '/%s/' % OLD_VERSION)
+        flags = test['flags'] or []
         if test['result'] == 'na' or (
                 os.path.exists(old_image_filename) and
                 os.path.exists(image_filename) and
                 open(image_filename, 'rb').read() ==
-                open(old_image_filename, 'rb').read()):
+                open(old_image_filename, 'rb').read() and
+                test['result'] != '?'):
             test['date'] = datetime(*datetime.utcnow().timetuple()[:6])
             save_test(suite_name, test)
             print('.', end='')
+        elif 'dom' in flags or 'script' in flags:
+            test['date'] = datetime(*datetime.utcnow().timetuple()[:6])
+            test['result'] = 'na'
+            save_test(suite_name, test)
+            print('n', end='')
         else:
             print('!', end='')
         sys.stdout.flush()
