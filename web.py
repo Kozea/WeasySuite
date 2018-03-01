@@ -15,10 +15,10 @@ See http://test.csswg.org/suites/
 
 """
 
+import argparse
 import fileinput
 import io
 import json
-import optparse
 import os
 import sys
 from base64 import b64encode
@@ -36,10 +36,12 @@ from pygments.formatters import HtmlFormatter
 from pygments.lexers import HtmlLexer
 from weasyprint import CSS, HTML, VERSION
 
-parser = optparse.OptionParser(version=VERSION)
-parser.add_option('-w', '--write', action='store_true')
-parser.add_option('-V', '--weasyprint-version', default=VERSION)
-options = parser.parse_args()[0]
+parser = argparse.ArgumentParser()
+parser.add_argument('-v', '--version', action='version', version=VERSION)
+parser.add_argument('-w', '--write', action='store_true')
+parser.add_argument('-s', '--suite', action='append', dest='suites')
+parser.add_argument('-V', '--weasyprint-version', default=VERSION)
+options = parser.parse_args()
 
 STYLESHEET = CSS(string='''
     @page { margin: 20px; size: 680px }
@@ -463,7 +465,7 @@ def test_data(suite, filename):
 
 
 if not options.write or __name__ == '__main__':
-    for suite_name in os.listdir(BASE_PATH):
+    for suite_name in options.suites or os.listdir(BASE_PATH):
         add_suite(suite_name)
 
 
