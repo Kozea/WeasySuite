@@ -17,7 +17,8 @@ import time
 from datetime import datetime
 
 from web import (
-    BASE_PATH, FOLDER, OUTPUT_FOLDER, SUITES, VERSION, add_suite, save_test)
+    BASE_PATH, FOLDER, OUTPUT_FOLDER, SUITES, VERSION, add_suite, options,
+    save_test)
 
 
 versions = sorted(os.listdir(os.path.join(FOLDER, 'results')))
@@ -31,7 +32,7 @@ for i in range(10):
     sys.stdout.flush()
     time.sleep(1)
 
-for suite in os.listdir(BASE_PATH):
+for suite in options.suites or os.listdir(BASE_PATH):
     add_suite(suite)
 
 for suite_name, suite in SUITES.items():

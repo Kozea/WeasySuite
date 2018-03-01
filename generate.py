@@ -21,7 +21,7 @@ import traceback
 from weasyprint import HTML
 
 from web import (
-    BASE_PATH, OUTPUT_FOLDER, STYLESHEET, SUITES, VERSION, add_suite)
+    BASE_PATH, OUTPUT_FOLDER, STYLESHEET, SUITES, VERSION, add_suite, options)
 
 
 logging.getLogger('weasyprint').setLevel(100)
@@ -38,8 +38,9 @@ if os.path.exists(OUTPUT_FOLDER):
 
 os.makedirs(OUTPUT_FOLDER)
 
-for suite in os.listdir(BASE_PATH):
+for suite in options.suites or os.listdir(BASE_PATH):
     add_suite(suite)
+
 
 CRASHES = []
 
