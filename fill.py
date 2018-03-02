@@ -51,7 +51,7 @@ for suite_name, suite in SUITES.items():
             test['date'] = datetime(*datetime.utcnow().timetuple()[:6])
             save_test(suite_name, test)
             print('.', end='')
-        elif 'dom' in flags or 'script' in flags:
+        elif 'dom' in flags or 'script' in flags or 'interact' in flags:
             test['date'] = datetime(*datetime.utcnow().timetuple()[:6])
             test['result'] = 'na'
             save_test(suite_name, test)
