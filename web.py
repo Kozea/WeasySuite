@@ -444,9 +444,9 @@ def render(suite, test_id, media_type='print', stylesheet=None):
     if '/' in test_id:
         folder = os.path.join(folder, os.path.dirname(test_id))
         test_id = os.path.basename(test_id)
-    filename, = [
+    filename = [
         filename for filename in os.listdir(folder)
-        if filename.lower().startswith(test_id + '.')]
+        if filename.lower().startswith(test_id + '.')][0]
     filename = safe_join(folder, filename)
     document = (
         HTML(filename, encoding='utf8', media_type=media_type)
