@@ -4,7 +4,7 @@ include Makefile.config
 all: install serve
 
 install:
-	test -d $(VENV) || virtualenv $(VENV)
+	test -d $(VENV) || python -m venv $(VENV)
 	$(PIP) install --upgrade --no-cache pip setuptools -e .[test]
 
 install-dev:
